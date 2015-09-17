@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Anki Adder</title>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="css/clozestyle.css" />
+		<script src="js/jquery.1.7.1.min.js"></script>
+		<script src="js/form.js"></script>
+		<script src="js/ankiweb.js"></script>
+		<script src="js/marking.js"></script>
+		<script src="js/analytics.js"></script>
+		</script>
+	</head>
+	
+	<body>
+		<div id="message"></div>
+		<div id="popup">
+			
+			<div id="topcontainer" class="clearfix">
+				<select data-i18ntt="tooltipModel" disabled name="model" style="width: 180px; float:left"></select>
+				<div class="loadinggifsmall">
+					<img src="images/loadingSmall.gif" />
+				</div>
+				<select data-i18ntt="tooltipDeck" disabled name="deck" style="width: 278px; float:right"></select>
+			</div>
+			
+			<div id="toolbar">
+				<button tabindex = "-1" data-i18ntt="toolBold" id="bold"><img src="images/toolbar/bold.png" draggable="false"/></button><!--
+			 --><button tabindex = "-1" data-i18ntt="toolItalic" id="italic"><img src="images/toolbar/italic.png" draggable="false"/></button><!--
+			 --><button tabindex = "-1" data-i18ntt="toolUnderline" id="underline"><img src="images/toolbar/underline.png" draggable="false"/></button><!--
+			 --><button tabindex = "-1" data-i18ntt="toolSuper" id="superscript"><img src="images/toolbar/super.png" draggable="false"/></button><!--
+			 --><button tabindex = "-1" data-i18ntt="toolSub" id="subscript"><img src="images/toolbar/sub.png" draggable="false"/></button><!--
+			 --><button tabindex = "-1" data-i18ntt="toolClear" id="removeFormat"><img src="images/toolbar/clear.png" draggable="false"/></button><!--
+			 --><input tabindex = "-1" type="color" id="colorpicker" name="color" value="#ff0000"/><!--
+			 --><button tabindex = "-1" data-i18ntt="toolColor" id="foreColor"><div id="colordisplay"></div></button><!--
+			 --><button tabindex = "-1" data-i18ntt="toolPickcolor" id="pickColor" style="width:12px"><img src="images/toolbar/down.png" draggable="false"/></button>
+			</div>
+			<div id="fields"></div>
+			
+			<div id="bottomcontainer" class="clearfix">
+				<div id="tagscontainer">
+					<hr/>
+					<div class="flexcontainer">
+						<span data-i18n="fnameTags" data-i18ntt="tooltipTags" class="tagfname">Tags</span>
+						<input id="tags" type="text" data-fieldnum="-1" />
+					</div>
+				</div>
+				<span class="addcardbutton">
+					<div data-i18ntt="tooltipLoadingbutton" class="loadinggif">
+						<img src="images/loadingButtonDown.gif" />
+					</div>
+					<div class="buttonready">
+						<span data-i18n="buttonAddcard">Add Card</span>
+						<div data-i18n="buttonSubtext" data-i18ntt="tooltipShortcuts" class="addcardsub">Ctrl + Enter</div>
+					</div>
+					
+				</span>
+			</div>
+
+		</div>
+	</body>
+</html>

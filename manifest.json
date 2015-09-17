@@ -1,0 +1,68 @@
+{
+   "background": {
+      "persistent": false,
+      "scripts": [ "eventPage.js" ]
+   },
+   "browser_action": {
+      "default_icon": "images/32.png",
+      "default_popup": "popup.html"
+   },
+   "commands": {
+      "_execute_browser_action": {
+         "suggested_key": {
+            "default": "Alt+A"
+         }
+      },
+      "add-to-1": {
+         "description": "__MSG_commandsAddto__1",
+         "suggested_key": {
+            "default": "Alt+Shift+1"
+         }
+      },
+      "add-to-2": {
+         "description": "__MSG_commandsAddto__2",
+         "suggested_key": {
+            "default": "Alt+Shift+2"
+         }
+      },
+      "add-to-3": {
+         "description": "__MSG_commandsAddto__3",
+         "suggested_key": {
+            "default": "Alt+Shift+3"
+         }
+      },
+      "add-to-4": {
+         "description": "__MSG_commandsAddto__4"
+      },
+      "add-to-5": {
+         "description": "__MSG_commandsAddto__5"
+      },
+      "add-to-6": {
+         "description": "__MSG_commandsAddto__6"
+      },
+      "add-to-7": {
+         "description": "__MSG_commandsAddto__7"
+      },
+      "add-to-8": {
+         "description": "__MSG_commandsAddto__8"
+      },
+      "add-to-9": {
+         "description": "__MSG_commandsAddto__9"
+      }
+   },
+   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+   "default_locale": "en",
+   "description": "__MSG_appDesc__",
+   "icons": {
+      "128": "images/128.png",
+      "16": "images/16.png",
+      "48": "images/48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnxIVtu3+skAmihAiRSCGNjr6/AFQFmTOuXuW/Lz8sOGM9+1RKH/MyOE3wj2apn6S0iFMUYvK5pObnoYfzDhW1RffVCx4YCotVG5LOC4NiN8TP8LB6AtiIDVIr+9mV9XAXvf2pddTDNItU4Lp/k7j1PLlxhmFdi7fxqxiB/lmCLtAePF7UL7G1NDYeCg43HrPCXwRHFz00oIs4j9cNB6+TW1v5uczR6wBuIwMiF/ixjrXqi8nEGLc+LYxssn0Ex7D4AzfWqBG8wTqPWB+8RkrMeX4R7gqs/ktBtmLhJWEj2olHOA3EEebr2LhQ1cyUf5QdeS1Dg4eDSsOVMBnrnufeQIDAQAB",
+   "manifest_version": 2,
+   "name": "Anki Adder",
+   "options_page": "options.html",
+   "permissions": [ "tabs", "http://*/*", "https://*/*", "contextMenus" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0.0"
+}

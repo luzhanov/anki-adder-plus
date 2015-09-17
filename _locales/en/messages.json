@@ -1,0 +1,205 @@
+{
+   "appDesc": {
+      "message": "Add cards to Anki directly from Chrome"
+   },
+   "buttonAddcard": {
+      "message": "Add Card"
+   },
+   "buttonCancelling": {
+      "message": "Cancelling..."
+   },
+   "buttonSubtext": {
+      "message": "Ctrl + Enter"
+   },
+   "commandsAddto": {
+      "message": "Add marked text to field "
+   },
+   "contextAddto": {
+      "message": "Add \"%s\" to "
+   },
+   "contextAddtofield": {
+      "message": "Add \"%s\" to field "
+   },
+   "errorCannotcontext": {
+      "message": "Does not work on this page. Please use copy and paste instead."
+   },
+   "errorCannotshortcuts": {
+      "message": "You cannot use shortcuts on this page."
+   },
+   "errorCard": {
+      "message": "Could not add card."
+   },
+   "errorConnectanki": {
+      "message": "Could not connect to Anki."
+   },
+   "errorEmptycard": {
+      "message": "Cannot add empty card."
+   },
+   "errorEmptycloze": {
+      "message": "Cannot add a cloze deletion card without clozes. Change model or add clozes to the field \"$clozefieldname$\".\n\nThis is done by clicking and dragging over words when the field is unfocused.",
+      "placeholders": {
+         "clozefieldname": {
+            "content": "$1"
+         }
+      }
+   },
+   "errorEmptyfirstfield": {
+      "message": "Cannot add card with an empty first field."
+   },
+   "errorHiddendecks": {
+      "message": "It looks like you have excluded all decks in the \u003Ca href='#'>options\u003C/a>. Take a look under \"Hide decks\"."
+   },
+   "errorHiddenmodels": {
+      "message": "It looks like you have excluded all models in the \u003Ca href='#'>options\u003C/a>. Take a look under \"Hide decks\"."
+   },
+   "errorLoading": {
+      "message": "Loading..."
+   },
+   "errorNoinfo": {
+      "message": "Add user info in the \u003Ca href='#'>options\u003C/a>."
+   },
+   "errorNointernet": {
+      "message": "No internet connection."
+   },
+   "errorWronginfo": {
+      "message": "Couldn't log onto AnkiWeb.\u003Cbr>Make sure account info (ID and password) is filled correctly in the \u003Ca href='#'>options\u003C/a>."
+   },
+   "fnameTags": {
+      "message": "Tags"
+   },
+   "opAccountinfo": {
+      "message": "Account Info"
+   },
+   "opAddshortcuts": {
+      "message": "Add keyboard shortcuts"
+   },
+   "opAuthor": {
+      "message": "by Hannes von Essen"
+   },
+   "opEmailID": {
+      "message": "Email/ID: "
+   },
+   "opErrorconnect": {
+      "message": "Could not connect to Anki."
+   },
+   "opErrorwronginfo": {
+      "message": "Cannot access your AnkiWeb account.\u003Cbr>Make sure the above Account Info is filled correctly."
+   },
+   "opExample": {
+      "message": "e.g. "
+   },
+   "opHide1": {
+      "message": "If there are certain decks or card models you know you will never use with this extension, you can hide them from the drop-down menus to make it easier to select the decks and models you \u003Cem>do\u003C/em> use."
+   },
+   "opHide2": {
+      "message": "Models to hide"
+   },
+   "opHide3": {
+      "message": "Decks to hide"
+   },
+   "opHidedecks": {
+      "message": "Hide decks"
+   },
+   "opPassword": {
+      "message": "Password: "
+   },
+   "opShortcuts1": {
+      "message": "This extension supports shortcuts for quickly adding selected text to each field, without the need to first open the popup window."
+   },
+   "opShortcuts10": {
+      "message": "."
+   },
+   "opShortcuts11": {
+      "message": "Open the popup with "
+   },
+   "opShortcuts12": {
+      "message": " and click the \"Add Card\" button."
+   },
+   "opShortcuts13": {
+      "message": "How to customize shortcuts"
+   },
+   "opShortcuts14": {
+      "message": "Go to the "
+   },
+   "opShortcuts15": {
+      "message": "extensions page"
+   },
+   "opShortcuts16": {
+      "message": " and press \"Keyboard shortcuts\" at the bottom of the page."
+   },
+   "opShortcuts2": {
+      "message": "Example of its usage:"
+   },
+   "opShortcuts3": {
+      "message": "Look up a word in you favourite online dictionary."
+   },
+   "opShortcuts4": {
+      "message": "Select the word and press "
+   },
+   "opShortcuts5": {
+      "message": " to add it to the front field."
+   },
+   "opShortcuts6": {
+      "message": "Select the translation/definition and press "
+   },
+   "opShortcuts7": {
+      "message": " to add it to the back field."
+   },
+   "opShortcuts8": {
+      "message": "Select any extra information, such as example sentences, and add each further down in the same field with (again) "
+   },
+   "opShortcuts9": {
+      "message": ", or in a third field with "
+   },
+   "opTooltipaddtofield": {
+      "message": "Go to the extensions page to add a keyboard combination for this."
+   },
+   "opTooltipopenpopup": {
+      "message": "You haven't set any shortcut for opening the popup yet.\nIt's the action called 'Activate the extension'"
+   },
+   "toolBold": {
+      "message": "Bold (Ctrl+B)"
+   },
+   "toolClear": {
+      "message": "Remove formatting (Ctrl+R)"
+   },
+   "toolColor": {
+      "message": "Colored text (F7)"
+   },
+   "toolItalic": {
+      "message": "Italic (Ctrl+I)"
+   },
+   "toolPickcolor": {
+      "message": "Pick color (F8)"
+   },
+   "toolSub": {
+      "message": "Subscript (Ctrl+0)"
+   },
+   "toolSuper": {
+      "message": "Superscript (Ctrl+ +)"
+   },
+   "toolUnderline": {
+      "message": "Underline (Ctrl+U)"
+   },
+   "tooltipClozefield": {
+      "message": "CLOZE DELETION: Click and drag with the mouse to select clozes.\nHold shift to select multiple parts as one cloze."
+   },
+   "tooltipDeck": {
+      "message": "Deck (Ctrl+D)"
+   },
+   "tooltipHistory": {
+      "message": "Quick History: When nothing is focused,\r\nuse the up and down arrow keys to browse through\r\nrecently used model-deck combinations."
+   },
+   "tooltipLoadingbutton": {
+      "message": "Adding card... Press again to cancel."
+   },
+   "tooltipModel": {
+      "message": "Model (Ctrl+M)"
+   },
+   "tooltipShortcuts": {
+      "message": "-------Shortcuts-------\nAdd card: Ctrl + Enter\nAdd card without closing: Shift + Enter\n\nEdit in html: Ctrl + Shift + X\n\nUp/Down: Switch between recently\nused models/decks"
+   },
+   "tooltipTags": {
+      "message": "Anki tags are space separated, but this extension allows comma separation as well."
+   }
+}

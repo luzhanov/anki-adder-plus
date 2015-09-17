@@ -1,0 +1,205 @@
+{
+   "appDesc": {
+      "message": "Lägg till Anki-kort direkt från Chrome"
+   },
+   "buttonAddcard": {
+      "message": "Lägg till"
+   },
+   "buttonCancelling": {
+      "message": "Avbryter..."
+   },
+   "buttonSubtext": {
+      "message": "Ctrl + Enter"
+   },
+   "commandsAddto": {
+      "message": "Lägg till markerad text i fält "
+   },
+   "contextAddto": {
+      "message": "Lägg till \"%s\" i "
+   },
+   "contextAddtofield": {
+      "message": "Lägg till \"%s\" i fält "
+   },
+   "errorCannotcontext": {
+      "message": "Fungerar inte på den här sidan. Använd kopiera och klistra in istället."
+   },
+   "errorCannotshortcuts": {
+      "message": "Kan inte använda kortkommandon på den här sidan."
+   },
+   "errorCard": {
+      "message": "Kortet kunde inte läggas till."
+   },
+   "errorConnectanki": {
+      "message": "Kunde inte ansluta till Anki."
+   },
+   "errorEmptycard": {
+      "message": "Kan inte lägga till tomma kort."
+   },
+   "errorEmptycloze": {
+      "message": "Kan inte lägga till lucktext-kort utan luckor. Byt kortmodell eller lägg till luckor i fältet \"$clozefieldname$\".\n\nDetta görs genom att klicka och dra över orden när fältet är inaktivt.",
+      "placeholders": {
+         "clozefieldname": {
+            "content": "$1"
+         }
+      }
+   },
+   "errorEmptyfirstfield": {
+      "message": "Kan inte lägga till kort med tomt första fält."
+   },
+   "errorHiddendecks": {
+      "message": "Det verkar som att alla kortlekar har valts bort i \u003Ca href='#'>inställningarna\u003C/a>. Titta under \"Dölj kortlekar\"."
+   },
+   "errorHiddenmodels": {
+      "message": "Det verkar som att alla korttyper har valts bort i \u003Ca href='#'>inställningarna\u003C/a>. Titta under \"Dölj kortlekar\"."
+   },
+   "errorLoading": {
+      "message": "Laddar..."
+   },
+   "errorNoinfo": {
+      "message": "Fyll i användarinfon i \u003Ca href='#'>inställningarna\u003C/a>."
+   },
+   "errorNointernet": {
+      "message": "Internetåtkomst saknas."
+   },
+   "errorWronginfo": {
+      "message": "Kunde inte logga in på AnkiWeb.\u003Cbr>Kontrollera att användarinfon (ID och lösenord) är korrekt ifylld i \u003Ca href='#'>inställningarna\u003C/a>."
+   },
+   "fnameTags": {
+      "message": "Etiketter"
+   },
+   "opAccountinfo": {
+      "message": "Användarinfo"
+   },
+   "opAddshortcuts": {
+      "message": "Lägg till kortkommandon"
+   },
+   "opAuthor": {
+      "message": "av Hannes von Essen"
+   },
+   "opEmailID": {
+      "message": "Email/ID: "
+   },
+   "opErrorconnect": {
+      "message": "Kunde inte ansluta till Anki."
+   },
+   "opErrorwronginfo": {
+      "message": "Kan inte logga in på AnkiWeb.\u003Cbr>Se till att Användarinfon är korrekt ifylld."
+   },
+   "opExample": {
+      "message": "t.ex. "
+   },
+   "opHide1": {
+      "message": "Om du har korttyper eller kortlekar som du vet att du inte kommer att använda med det här tillägget kan du dölja dem från rullmenyerna för att göra det lättare att välja bland de korttyper och kortlekar som du faktiskt använder."
+   },
+   "opHide2": {
+      "message": "Korttyper att dölja"
+   },
+   "opHide3": {
+      "message": "Kortlekar att dölja"
+   },
+   "opHidedecks": {
+      "message": "Dölj kortlekar"
+   },
+   "opPassword": {
+      "message": "Lösenord: "
+   },
+   "opShortcuts1": {
+      "message": "Det här tillägget stöder kortkommandon för att snabbt lägga till markerad text till kortets fält, utan att behöva öppna upp popup-rutan."
+   },
+   "opShortcuts10": {
+      "message": "."
+   },
+   "opShortcuts11": {
+      "message": "Öppna popup-rutan med "
+   },
+   "opShortcuts12": {
+      "message": " och klicka på \"Lägg till\"."
+   },
+   "opShortcuts13": {
+      "message": "Hur man väljer kortkommandon"
+   },
+   "opShortcuts14": {
+      "message": "Gå till sidan "
+   },
+   "opShortcuts15": {
+      "message": "Tillägg"
+   },
+   "opShortcuts16": {
+      "message": " och klicka på \"Kortkommandon\" längst ner på sidan."
+   },
+   "opShortcuts2": {
+      "message": "Exempel på hur det kan användas:"
+   },
+   "opShortcuts3": {
+      "message": "Slå upp ett ord i ditt favorituppslagsverk online."
+   },
+   "opShortcuts4": {
+      "message": "Markera ordet och tryck "
+   },
+   "opShortcuts5": {
+      "message": " för att lägga till det till framsidan av kortet."
+   },
+   "opShortcuts6": {
+      "message": "Markera översättningen/definitionen och tryck "
+   },
+   "opShortcuts7": {
+      "message": " för att lägga till det till kortets baksida."
+   },
+   "opShortcuts8": {
+      "message": "Markera övrig information du vill ha med, som exempelmeningar, och lägg till varje mening längre ner i samma fält genom att återigen trycka "
+   },
+   "opShortcuts9": {
+      "message": ", eller i ett tredje fält med "
+   },
+   "opTooltipaddtofield": {
+      "message": "Gå till sidan Tillägg för att lägga till det här kortkommandot."
+   },
+   "opTooltipopenpopup": {
+      "message": "Du har inte ställt in något kortkommando för att öppna popup-rutan än.\nDet är kommandot som kallas 'Aktivera tillägget'"
+   },
+   "toolBold": {
+      "message": "Fet (Ctrl+B)"
+   },
+   "toolClear": {
+      "message": "Radera formatering (Ctrl+R)"
+   },
+   "toolColor": {
+      "message": "Färgtext (F7)"
+   },
+   "toolItalic": {
+      "message": "Kursiv (Ctrl+I)"
+   },
+   "toolPickcolor": {
+      "message": "Välj färg (F8)"
+   },
+   "toolSub": {
+      "message": "Nedsänkt (Ctrl+=)"
+   },
+   "toolSuper": {
+      "message": "Upphöjd (Ctrl+ +)"
+   },
+   "toolUnderline": {
+      "message": "Understruken (Ctrl+U)"
+   },
+   "tooltipClozefield": {
+      "message": "LUCKTEXT: Klicka och dra över orden för att skapa luckor.\nHåll nere skift för att lägga till en lucka i flera delar."
+   },
+   "tooltipDeck": {
+      "message": "Kortlek (Ctrl+D)"
+   },
+   "tooltipHistory": {
+      "message": "Snabbhistorik: När inget fält är fokuserat\r\nkan du använda upp- och nertangenterna för att växla mellan\r\nnyligen använda kombinationer av korttyp-kortlek."
+   },
+   "tooltipLoadingbutton": {
+      "message": "Lägger till kort... Tryck igen för att avbryta."
+   },
+   "tooltipModel": {
+      "message": "Korttyp (Ctrl+M)"
+   },
+   "tooltipShortcuts": {
+      "message": "-----Kortkommandon-----\nLägg till kort: Ctrl + Enter\nLägg till och fortsätt: Skift + Enter\n\nRedigera i html: Ctrl + Skift + X\n\nUpp/Ner: Bläddra mellan de senast\nanvända korttyperna och kortlekarna"
+   },
+   "tooltipTags": {
+      "message": "Anki-taggar separeras med mellanslag, men den här extensionen godtar även komma-separering."
+   }
+}

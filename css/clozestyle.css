@@ -1,0 +1,89 @@
+#clozefield {
+	-webkit-user-select: none; 
+	cursor: text;
+	
+	border: 1px solid #aaa;
+	background: #fff;
+	padding: 5px;
+	width: 472px;
+	overflow: hidden;
+	margin: 0 8px;
+	color: #404040;
+}
+
+
+#clozefield .nopaddingStart {
+	padding-left: 0px;
+	margin-left: -3px;
+}
+#clozefield .nopaddingEnd {
+	padding-right: 0px;
+	margin-right: -3px;
+}
+#clozefield .openStart {
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+#clozefield .openEnd {
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+#clozefield .moveLeft {
+	right: 2px;
+}
+#clozefield .moveRight {
+	left: 2px;
+}
+
+.w, .p, .c, .s {
+	border-radius:7px;
+	padding:0 3px 0 3px;
+	cursor: default;
+	font-family: Lato, Arial, Helvetica, sans-serif;
+	font-size: 1.0em;
+	word-spacing: 3px;
+	display: inline-block;
+}
+
+.s {
+	display: none;
+	padding: 0px;
+}
+
+.s + .s {
+	display: inline;
+}
+.n + .s {
+	display: inline;
+}
+
+.w, .p {
+	position: relative;
+	z-index: 1; /*Always shown higher than markings*/
+}
+
+.c[data-c="1"] {background-color: #9595ff; color: #000000;}
+.c[data-c="2"] {background-color: #80beff; color: #000000;}
+.c[data-c="3"] {background-color: #abfaff; color: #000000;}
+.c[data-c="4"] {background-color: #94c9a6; color: #000000;}
+.c[data-c="5"] {background-color: #b3ffab; color: #000000;}
+.c[data-c="6"] {background-color: #ccff31; color: #000000;}
+.c[data-c="7"] {background-color: #ffe9ab; color: #000000;}
+.c[data-c="8"] {background-color: #ffcdab; color: #000000;}
+.c[data-c="9"] {background-color: #ffabab; color: #000000;}
+.c[data-c="10"] {background-color: #eeabff; color: #000000;}
+
+.w:hover {
+	z-index: 0; /*This makes it show higher than markings but lower than text without colored background*/
+}
+.w:hover[data-c="1"] {background-color: #DDDDFF; color: #000000;}
+.w:hover[data-c="2"] {background-color: #deeeff; color: #000000;}
+.w:hover[data-c="3"] {background-color: #defdff; color: #000000;}
+.w:hover[data-c="4"] {background-color: #cff1db; color: #000000;}
+.w:hover[data-c="5"] {background-color: #e1ffde; color: #000000;}
+.w:hover[data-c="6"] {background-color: #e9ffa7; color: #000000;}
+.w:hover[data-c="7"] {background-color: #fff6de; color: #000000;}
+.w:hover[data-c="8"] {background-color: #ffebde; color: #000000;}
+.w:hover[data-c="9"] {background-color: #ffdede; color: #000000;}
+.w:hover[data-c="10"] {background-color: #f8deff; color: #000000;}
+.w:hover[data-c="-1"] {background-color: none;} /*When all colors are used*/
