@@ -18,6 +18,24 @@ $(document).ready(function () {
         }
     });
 
+    $("#saveaccountbutton").on('click', function () {
+        localStorage['option-ID'] = $('#option-ID-field').val();
+        localStorage['option-password'] = $('#option-password-field').val();
+
+        //Refresh decks and models
+        if (currentXhr && currentXhr.readyState != 4) {
+            currentXhr.abort();
+        }
+        console.log("Connecting to Anki login");
+        connectToAnki(function (updateCurrent, updateModelList, updateDeckList) {
+            if (updateModelList)
+                optionsListModels();
+            if (updateDeckList) {
+                optionsListDecks();
+                detailedDeckNames();
+            }
+        });
+    });
     $("#shortcutbutton").on('click', function () {
         $("#excludepanel").slideUp();
         $("#shortcutpanel").slideToggle();
@@ -41,24 +59,9 @@ $(document).ready(function () {
 function loadValues() {
     $("input[name|=option]").each(function () {
         var name = $(this).attr("name");
-        if (localStorage[name])
+        if (localStorage[name]) {
             $(this).val(localStorage[name]);
-        //Options are saved automatically
-        $(this).on('input propertychange', function () {
-            localStorage[name] = $(this).val();
-            if (name == "option-password" || name == "option-ID") {
-                if (currentXhr && currentXhr.readyState != 4) //Refresh decks and models
-                    currentXhr.abort();
-                connectToAnki(function (updateCurrent, updateModelList, updateDeckList) {
-                    if (updateModelList)
-                        optionsListModels();
-                    if (updateDeckList) {
-                        optionsListDecks();
-                        detailedDeckNames();
-                    }
-                });
-            }
-        })
+        }
     });
 }
 
@@ -81,35 +84,45 @@ function loadShortcuts() {
 function optionsListModels() {
     $("#modellist").empty();
     for (var n = 0; localStorage["model" + n]; n++) {
-        $("#modellist")
-            .append($(document.createElement("li"))
-                .on({"mouseover": function () {
-                    $(this).find("input").css("opacity", 1);
+
+        var inputElem = $(document.createElement("input"))
+            .on({
+                "focus": function () {
+                    $(this).css("opacity", 1);
                 },
+                "blur": function () {
+                    if (!localStorage["excludedModel:" + $(this).val()])
+                        $(this).css("opacity", 0);
+                }})
+            .attr({
+                type: "checkbox",
+                value: localStorage["model" + n]
+            })
+            .change(function () {
+                var key = "excludedModel:" + $(this).val();
+                if (this.checked) //This is before, so if it is now checked it will be unchecked.
+                    localStorage[key] = "true";
+                else
+                    localStorage.removeItem(key);
+                detailedDeckNames();
+            }).after($(document.createElement("span")).append(document.createTextNode(localStorage["model-name:" + localStorage["model" + n]])));
+
+
+        $("#modellist").append(
+            $(document.createElement("li"))
+                .on({
+                    "mouseover": function () {
+                        $(this).find("input").css("opacity", 1);
+                    },
                     "mouseout": function () {
                         if (!localStorage["excludedModel:" + $(this).find("input").val()])
                             $(this).find("input").css("opacity", 0);
-                    }}).append($(document.createElement("label"))
-                    .append($(document.createElement("input"))
-                        .on({"focus": function () {
-                            $(this).css("opacity", 1);
-                        },
-                            "blur": function () {
-                                if (!localStorage["excludedModel:" + $(this).val()])
-                                    $(this).css("opacity", 0);
-                            }})
-                        .attr({ type: "checkbox",
-                            value: localStorage["model" + n] })
-                        .change(function () {
-                            var key = "excludedModel:" + $(this).val();
-                            if (this.checked) //This is before, so if it is now checked it will be unchecked.
-                                localStorage[key] = "true";
-                            else
-                                localStorage.removeItem(key);
-                            detailedDeckNames();
-                        })
-                        .after($(document.createElement("span")).append(document.createTextNode(localStorage["model-name:" + localStorage["model" + n]])))))
+                    }})
+                .append(
+                $(document.createElement("label"))
+                    .append(inputElem))
         );
+
         if (localStorage["excludedModel:" + localStorage["model" + n]])
             $("#modellist input").last().attr("checked", true);
         else
