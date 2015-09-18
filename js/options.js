@@ -10,6 +10,7 @@ $(document).ready(function () {
 
     //Check if the lists of models/decks have changed
     connectToAnki(function (updateCurrent, updateModelList, updateDeckList) {
+        $("#accountMessage").text('');
         if (updateModelList)
             optionsListModels();
         if (updateDeckList) {
@@ -17,11 +18,8 @@ $(document).ready(function () {
             detailedDeckNames();
         }
     }, function(errorMessage) {
-//            if (errorMessage == "errorWronginfo") {
-//                showMessage(1, "errorWronginfo");
-//            } else {
-        alert(errorMessage);
-        //   }
+        var msgLocalised = chrome.i18n.getMessage(errorMessage);
+        $("#accountMessage").html(msgLocalised);
     });
 
     $("#saveaccountbutton").on('click', function () {

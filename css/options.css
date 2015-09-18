@@ -160,3 +160,8 @@ ol {
 .dlvl_3 {
 	color:#777;
 }
+
+#accountMessage {
+    color: red;
+    margin-top: 10px;
+}
