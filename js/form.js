@@ -55,13 +55,6 @@ $(document).ready(function () {
     }
 
     connectToAnki(function (updateCurrent, updateModelList, updateDeckList) {
-        if (arguments.length == 1) { //An error occurred
-            if (arguments[0] == "errorWronginfo")
-                showMessage(1, "errorWronginfo");
-            else
-                alert(arguments[0]);
-            return;
-        }
         if ($("#popup").css("display") == "none") {
             formStart();
         }
@@ -79,8 +72,14 @@ $(document).ready(function () {
             generateFields();
             loadSelection();
         }
+    }, function(errorMessage) {
+        if (errorMessage == "errorWronginfo") {
+            showMessage(1, "errorWronginfo");
+        } else {
+            alert(errorMessage);
+        }
     });
-})
+});
 
 function formStart() {
     $("#popup").css("display", "block");
@@ -99,7 +98,7 @@ function formStart() {
     document.onselectionchange = function () {
         saveSelection(false);
         updateToolbar();
-    }
+    };
     setTimeout(function () {
         mouseDown = false;
     }, 1);

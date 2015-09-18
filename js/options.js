@@ -16,6 +16,12 @@ $(document).ready(function () {
             optionsListDecks();
             detailedDeckNames();
         }
+    }, function(errorMessage) {
+//            if (errorMessage == "errorWronginfo") {
+//                showMessage(1, "errorWronginfo");
+//            } else {
+        alert(errorMessage);
+        //   }
     });
 
     $("#saveaccountbutton").on('click', function () {
@@ -34,6 +40,12 @@ $(document).ready(function () {
                 optionsListDecks();
                 detailedDeckNames();
             }
+        }, function(errorMessage) {
+//            if (errorMessage == "errorWronginfo") {
+//                showMessage(1, "errorWronginfo");
+//            } else {
+            alert(errorMessage);
+            //   }
         });
     });
     $("#shortcutbutton").on('click', function () {
