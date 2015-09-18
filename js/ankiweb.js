@@ -20,10 +20,12 @@ function connectToAnki(successCallback, errorCallback) {
             function (data, textStatus) {
                 var html = $(data);
                 if ($(".mitem", html).length == 0) { //Look for element with class 'mitem' which is only used by the tabs that show up when logged in.
+                    localStorage["login-status"] = "ERROR";
                     errorCallback("errorWronginfo"); //If it cannot be found it means the login failed, likely due to wrong username/password.
                     return;
                 }
 
+                localStorage["login-status"] = "OK";
                 if (localStorage["currentModel"] !== undefined && localStorage["currentDeck"] !== undefined) {
                     //Save current combo at zero level.
                     localStorage["combo0"] = localStorage["currentModel"] + "::" + localStorage["currentDeck"];

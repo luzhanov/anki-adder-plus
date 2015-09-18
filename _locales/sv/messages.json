@@ -58,6 +58,9 @@
    "errorNoinfo": {
       "message": "Fyll i användarinfon i \u003Ca href='#'>inställningarna\u003C/a>."
    },
+   "errorLoginStatus" : {
+      "message": "Can't login into Anki. Check your login & password in the \u003Ca href='#'>options\u003C/a>."
+   },
    "errorNointernet": {
       "message": "Internetåtkomst saknas."
    },

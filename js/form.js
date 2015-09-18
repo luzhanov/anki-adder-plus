@@ -18,6 +18,10 @@ $(document).ready(function () {
         showMessage(1, "errorNoinfo");
         return;
     }
+    if (!localStorage["login-status"] || localStorage["login-status"] != "OK") {
+        showMessage(1, "errorLoginStatus");
+        return;
+    }
     if (!navigator.onLine) {
         showMessage(0, "errorNointernet");
         return;
