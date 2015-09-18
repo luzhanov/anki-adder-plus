@@ -115,7 +115,7 @@ function optionsListModels() {
                 else
                     localStorage.removeItem(key);
                 detailedDeckNames();
-            }).after($(document.createElement("span")).append(document.createTextNode(localStorage["model-name:" + localStorage["model" + n]])));
+            });
 
 
         $("#modellist").append(
@@ -128,9 +128,12 @@ function optionsListModels() {
                         if (!localStorage["excludedModel:" + $(this).find("input").val()])
                             $(this).find("input").css("opacity", 0);
                     }})
-                .append(
-                $(document.createElement("label"))
-                    .append(inputElem))
+                .append($(document.createElement("label"))
+                    .append(inputElem)
+                    .append($(document.createElement("span"))
+                        .append(document.createTextNode(localStorage["model-name:" + localStorage["model" + n]]))
+                )
+            )
         );
 
         if (localStorage["excludedModel:" + localStorage["model" + n]])
@@ -160,9 +163,10 @@ function optionsListDecks() {
 
         $("#decklist")
             .append($(document.createElement("li"))
-                .on({"mouseover": function () {
-                    $(this).find("input").css("opacity", 1);
-                },
+                .on({
+                    "mouseover": function () {
+                        $(this).find("input").css("opacity", 1);
+                    },
                     "mouseout": function () {
                         if (!localStorage["excludedDeck:" + $(this).find("input").val()])
                             $(this).find("input").css("opacity", 0);
@@ -170,15 +174,18 @@ function optionsListDecks() {
                 .addClass(className).append($(document.createElement("label"))
                     .append(white)
                     .append($(document.createElement("input"))
-                        .on({"focus": function () {
-                            $(this).css("opacity", 1);
-                        },
+                        .on({
+                            "focus": function () {
+                                $(this).css("opacity", 1);
+                            },
                             "blur": function () {
                                 if (!localStorage["excludedDeck:" + $(this).val()])
                                     $(this).css("opacity", 0);
                             }})
-                        .attr({ type: "checkbox",
-                            value: localStorage["deck" + n] })
+                        .attr({
+                            type: "checkbox",
+                            value: localStorage["deck" + n]
+                        })
                         .change(function () {
                             var key = "excludedDeck:" + $(this).val();
                             if (this.checked) //This is before, so if it is now checked it will be unchecked.
@@ -186,8 +193,8 @@ function optionsListDecks() {
                             else
                                 localStorage.removeItem(key);
                             detailedDeckNames();
-                        })
-                        .after($(document.createElement("span")).append(document.createTextNode(endName)))))
+                        }))
+                    .append($(document.createElement("span")).append(document.createTextNode(endName))))
         );
         if (localStorage["excludedDeck:" + localStorage["deck" + n]])
             $("#decklist input").last().attr("checked", true);
