@@ -39,12 +39,9 @@ $(document).ready(function () {
                 detailedDeckNames();
             }
         }, function(errorMessage) {
-//            if (errorMessage == "errorWronginfo") {
-//                showMessage(1, "errorWronginfo");
-//            } else {
+            //todo: i18n message
             alert(errorMessage);
-            //   }
-        });
+        }, true);
     });
     $("#shortcutbutton").on('click', function () {
         $("#excludepanel").slideUp();

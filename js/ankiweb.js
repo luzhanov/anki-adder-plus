@@ -2,7 +2,7 @@
 
 var currentXhr = undefined; //Is null when finished
 
-function connectToAnki(successCallback, errorCallback) {
+function connectToAnki(successCallback, errorCallback, forceRelogin) {
     //Logs onto Anki with the username and password provided in the settings and updates the localStorage variables.
 
     //The arguments in the callback function tell if anything has changed since the last time the function was called (and should thus be refreshed)
@@ -11,29 +11,37 @@ function connectToAnki(successCallback, errorCallback) {
     //If only one argument is given, the connection failed, and the argument contains the error code word of the problem
     //callback(errorCode)
 
-    currentXhr = $.get('https://ankiweb.net/account/logout', function (data, textStatus) { //Start with logging any other user off.
-        currentXhr = $.post('https://ankiweb.net/account/login', { //Submit user info
-                submitted: "1",
-                username: localStorage["option-ID"],
-                password: localStorage["option-password"]
-            },
-            function (data, textStatus) {
-                var html = $(data);
-                if ($(".mitem", html).length == 0) { //Look for element with class 'mitem' which is only used by the tabs that show up when logged in.
-                    localStorage["login-status"] = "ERROR";
-                    errorCallback("errorWronginfo"); //If it cannot be found it means the login failed, likely due to wrong username/password.
-                    return;
-                }
+    if (forceRelogin || !localStorage["login-status"] || localStorage["login-status"] != "OK") {
+        //need to relogin
+        console.log("Logout form AnkiWeb");
+        currentXhr = $.get('https://ankiweb.net/account/logout', function (data, textStatus) { //Start with logging any other user off.
+            console.log("Login to AnkiWeb");
+            currentXhr = $.post('https://ankiweb.net/account/login', { //Submit user info
+                    submitted: "1",
+                    username: localStorage["option-ID"],
+                    password: localStorage["option-password"]
+                },
+                function (data, textStatus) {
+                    var html = $(data);
+                    if ($(".mitem", html).length == 0) { //Look for element with class 'mitem' which is only used by the tabs that show up when logged in.
+                        localStorage["login-status"] = "ERROR";
+                        errorCallback("errorWronginfo"); //If it cannot be found it means the login failed, likely due to wrong username/password.
+                        return;
+                    }
 
-                localStorage["login-status"] = "OK";
-                if (localStorage["currentModel"] !== undefined && localStorage["currentDeck"] !== undefined) {
-                    //Save current combo at zero level.
-                    localStorage["combo0"] = localStorage["currentModel"] + "::" + localStorage["currentDeck"];
-                }
+                    localStorage["login-status"] = "OK";
+                    if (localStorage["currentModel"] !== undefined && localStorage["currentDeck"] !== undefined) {
+                        //Save current combo at zero level.
+                        localStorage["combo0"] = localStorage["currentModel"] + "::" + localStorage["currentDeck"];
+                    }
 
-                retrieveData(successCallback);
-            });
-    });
+                    retrieveData(successCallback);
+                });
+        });
+    } else {
+        //we are already logged in
+        retrieveData(successCallback);
+    }
 }
 
 function retrieveData(successCallback) {
@@ -43,6 +51,7 @@ function retrieveData(successCallback) {
     //Login successful, now retrieve models and decks.
 
     currentXhr = $.get('https://ankiweb.net/edit/', function (data, textStatus) {
+        console.log("Data loaded");
         if (textStatus == 'error') {
             alert(chrome.i18n.getMessage("errorConnectanki"));
             return;
@@ -217,11 +226,8 @@ function addNote(dontClose) {
             }
             addNote(dontCloseAfterAdding);
         }, function(errorMessage) {
-//            if (errorMessage == "errorWronginfo") {
-//                showMessage(1, "errorWronginfo");
-//            } else {
+                //todo: i18n message
                 alert(errorMessage);
-         //   }
         });
         return;
     }
