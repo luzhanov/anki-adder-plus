@@ -12,6 +12,8 @@ var shift = false;
 var alt = false;
 var mouseDown = true; //Keep track of whether the mouse is pressed (only true if mouse was pressed inside a field). Is true at the beginning to prevent placing caret at end
 var returnDeck = false; //When the value of the deck list has been changed into a long name this is true which makes it change back when the user goes to the list.
+var clozeN = -1;
+var oldClozeN = -1;
 
 $(document).ready(function () {
     if (!localStorage["option-ID"] || !localStorage["option-password"]) {
@@ -112,8 +114,10 @@ function formStart() {
 }
 
 function initPopup() {
-    $(".loadinggifsmall").delay(3000).fadeIn(1000); //If the connection to AnkiWeb has not been initialized after 3 secs, show small loading gif
+    console.log("Init popup");
+
     $(".addcardbutton").click(function () {
+        $(".loadinggifsmall").delay(3000).fadeIn(1000); //If the connection to AnkiWeb has not been initialized after 3 secs, show small loading gif
         if ($(this).is(".addcardbuttondown")) {
             //Cancel the adding of a card
             if (currentXhr && currentXhr.readyState != 4) {
@@ -149,27 +153,44 @@ function initPopup() {
         else
             comboLevel = 0;
 
-    }).on({"focus": function () {
-        if (returnDeck) {
-            returnDeck = false;
-            $(this).val(localStorage["currentDeck"]);
+    }).on({
+        "focus": function () {
+            if (returnDeck) {
+                returnDeck = false;
+                $(this).val(localStorage["currentDeck"]);
+            }
+        },
+        "blur": function () {
+            //Use longer names when needed
+            showDetailedDeckName();
         }
-    }, "blur": function () {
-        //Use longer names when needed
-        showDetailedDeckName();
-    }
     });
     $("#tags").val(localStorage["fieldTags"])
-        .on({'input propertychange': function () {
-            localStorage["fieldTags"] = $(this).val();
-        }, 'blur': function () {
-            saveSelection('tags');
-            setTimeout(function () {
-                if (document.activeElement == document.body) saveSelection(-1)
-            }, 200);
-        }
+        .on({
+            'input propertychange': function () {
+                localStorage["fieldTags"] = $(this).val();
+            },
+            'blur': function () {
+                saveSelection('tags');
+                setTimeout(function () {
+                    if (document.activeElement == document.body) {
+                        saveSelection(-1)
+                    }
+                }, 200);
+            }
         });
 
+    initKeyShortcuts();
+
+    $(window).mouseup(function () {
+        if ($("#clozefield").length) {
+            globalMouseUp(); //Works even outside the window
+        }
+        mouseDown = false;
+    });
+}
+
+function initKeyShortcuts() {
     $(document).keydown(function (e) {
         ctrl = e.ctrlKey;
         shift = e.shiftKey;
@@ -412,23 +433,21 @@ function initPopup() {
 
         clozeUpdateHoverColor();
     });
-
-    $(window).mouseup(function () {
-        if ($("#clozefield").length)
-            globalMouseUp(); //Works even outside the window
-        mouseDown = false;
-    });
 }
 
 function generateFields() {
-    $("#fields").empty();
+    console.log("Field generation started");
+
+    var fieldsElement = $("#fields");
+
+    fieldsElement.empty();
     oldClozeN = clozeN;
-    clozeN = undefined;
+    clozeN = -1;
     var id = $("select[name=model]").val();
+    console.log("id", id);
+
     for (var n = 1; localStorage["model-fieldName-" + n + ":" + id]; n++) {
-        $("#fields")
-            .append($(document.createElement("div"))
-                .addClass("fname")
+        fieldsElement.append($(document.createElement("div")).addClass("fname")
                 .append(document.createTextNode(localStorage["model-fieldName-" + n + ":" + id]))
         );
         if (localStorage["model-clozeFieldNum:" + id] == n) { //Clozefield
@@ -447,9 +466,10 @@ function generateFields() {
 }
 
 function appendClozefield() {
-    $("#fields .fname").last().attr("title", chrome.i18n.getMessage("tooltipClozefield")); //Add description
+    var fieldsElement = $("#fields");
 
-    $("#fields").append($(document.createElement("textarea")).attr("id", "clozearea").val(htmlToClozeText(localStorage["field" + clozeN])));
+    fieldsElement.find(".fname").last().attr("title", chrome.i18n.getMessage("tooltipClozefield")); //Add description
+    fieldsElement.append($(document.createElement("textarea")).attr("id", "clozearea").val(htmlToClozeText(localStorage["field" + clozeN])));
 
     if (clozeFieldIsEmpty()) { //If not empty
         clozeArea();
@@ -607,10 +627,12 @@ function saveSelection(fieldnum) {
             localStorage["caretPos"] += "->" + lastFocusOffset;
         localStorage["caretField"] = clozeN;
     } else { //Save to localStorage
-        var anchorParentIndex = $(".field[data-fieldnum=" + fieldnum + "]").find("*").index($(lastAnchorNode).parent());
+        var dataFieldElement = $(".field[data-fieldnum=" + fieldnum + "]");
+
+        var anchorParentIndex = dataFieldElement.find("*").index($(lastAnchorNode).parent());
         var anchorNodeIndex = $(lastAnchorNode).parent().contents().index($(lastAnchorNode));
         var anchorOffset = lastAnchorOffset;
-        var focusParentIndex = $(".field[data-fieldnum=" + fieldnum + "]").find("*").index($(lastFocusNode).parent());
+        var focusParentIndex = dataFieldElement.find("*").index($(lastFocusNode).parent());
         var focusNodeIndex = $(lastFocusNode).parent().contents().index($(lastFocusNode));
         var focusOffset = lastFocusOffset;
         localStorage["caretPos"] = anchorParentIndex + ":" + anchorNodeIndex + ":" + anchorOffset;
@@ -649,12 +671,14 @@ function loadSelection() {
             id.setSelectionRange(pos[0], pos[1]);
         return;
     }
-    $(".field[data-fieldnum=" + field + "]").focus();
-    if ($(".field[data-fieldnum=" + field + "]").text() == "") //Prevent missing caret
+    var dataFieldElement = $(".field[data-fieldnum=" + field + "]");
+
+    dataFieldElement.focus();
+    if (dataFieldElement.text() == "") //Prevent missing caret
         return;
     var s = window.getSelection();
     if (pos[0] == "fromend") { //Newly added text
-        var contents = $(".field[data-fieldnum=" + field + "]").contents();
+        var contents = dataFieldElement.contents();
         var len = contents.length;
         var anchorNode = contents[len - pos[1]];
         var anchorOffset = 0;
@@ -666,18 +690,18 @@ function loadSelection() {
     }
     if (pos.length >= 3) {
         if (pos[0] == -1)
-            anchorNode = $(".field[data-fieldnum=" + field + "]").contents().eq(pos[1]).get(0);
+            anchorNode = dataFieldElement.contents().eq(pos[1]).get(0);
         else
-            anchorNode = $(".field[data-fieldnum=" + field + "]").find("*:eq(" + pos[0] + ")").contents().eq(pos[1]).get(0);
+            anchorNode = dataFieldElement.find("*:eq(" + pos[0] + ")").contents().eq(pos[1]).get(0);
         anchorOffset = pos[2];
 
         s.collapse(anchorNode, anchorOffset);
     }
     if (pos.length == 6) {
         if (pos[3] == -1)
-            focusNode = $(".field[data-fieldnum=" + field + "]").contents().eq(pos[4]).get(0);
+            focusNode = dataFieldElement.contents().eq(pos[4]).get(0);
         else
-            focusNode = $(".field[data-fieldnum=" + field + "]").find("*:eq(" + pos[3] + ")").contents().eq(pos[4]).get(0);
+            focusNode = dataFieldElement.find("*:eq(" + pos[3] + ")").contents().eq(pos[4]).get(0);
         focusOffset = pos[5];
 
         if (focusNode)
@@ -702,13 +726,14 @@ function placeCaretAtEnd(n) {
 }
 
 function fillModelList() {
-    if (!$("select[name='model']").attr("disabled"))
-        $("select[name='model']").empty(); //Remove old items from list
+    var $modelSelect = $("select[name='model']");
+    if (!$modelSelect.attr("disabled")) {
+        $modelSelect.empty(); //Remove old items from list
+    }
 
     for (var n = 0; localStorage["model" + n]; n++) {
         if (!localStorage["excludedModel:" + localStorage["model" + n]]) { //Ignore excluded models
-            $("select[name='model']")
-                .removeAttr("disabled")
+            $modelSelect.removeAttr("disabled")
                 .append($(document.createElement("option"))
                     .attr({ value: localStorage["model" + n] })
                     .append(document.createTextNode(localStorage["model-name:" + localStorage["model" + n]]))
@@ -716,15 +741,17 @@ function fillModelList() {
         }
     }
     if (localStorage["currentModel"]) {
-        $("select[name='model']").val(localStorage["currentModel"]);
+        $modelSelect.val(localStorage["currentModel"]);
     }
-    localStorage["currentModel"] = $("select[name='model']").val(); //Avoid non-existing values
-
+    localStorage["currentModel"] = $modelSelect.val(); //Avoid non-existing values
 }
 
 function fillDeckList() {
-    if (!$("select[name='deck']").attr("disabled"))
-        $("select[name='deck']").empty(); //Remove old items from list
+    var $deckSelect = $("select[name='deck']");
+
+    if (!$deckSelect.attr("disabled")) {
+        $deckSelect.empty(); //Remove old items from list
+    }
 
     for (var n = 0; localStorage["deck" + n]; n++) {
         if (!localStorage["excludedDeck:" + localStorage["deck" + n]]) { //Ignore excluded decks
@@ -740,8 +767,7 @@ function fillDeckList() {
                 white += "&nbsp;&nbsp;&nbsp;";
             }
             var className = "dlvl_" + (lvl <= 3 ? lvl : 3);
-            $("select[name='deck']")
-                .removeAttr("disabled")
+            $deckSelect.removeAttr("disabled")
                 .append($(document.createElement("option"))
                     .attr({ value: localStorage["deck" + n] })
                     .addClass(className)
@@ -751,8 +777,7 @@ function fillDeckList() {
     }
 
     //Add hidden option, to show detailed deck name when necessary
-    $("select[name='deck']")
-        .removeAttr("disabled")
+    $deckSelect.removeAttr("disabled")
         .append($(document.createElement("option"))
             .attr({ value: "\n",
                 id: "hiddendeck",
@@ -763,11 +788,11 @@ function fillDeckList() {
     );
 
     if (localStorage["currentDeck"]) {
-        $("select[name='deck']").val(localStorage["currentDeck"]);
+        $deckSelect.val(localStorage["currentDeck"]);
         var chosenClass = $("select[name='deck'] > option[value='" + localStorage["currentDeck"] + "']").attr("class");
-        $("select[name='deck']").removeClass().addClass(chosenClass);
+        $deckSelect.removeClass().addClass(chosenClass);
     }
-    localStorage["currentDeck"] = $("select[name='deck']").val(); //Avoid non-existing values
+    localStorage["currentDeck"] = $deckSelect.val(); //Avoid non-existing values
 }
 
 function saveCombo() {
@@ -995,18 +1020,21 @@ function showMessage(type, message) {
     //type: 0 = normal message, 1 = message linking to options
     var content = chrome.i18n.getMessage(message);
     $("#popup").css("display", "none");
-    $("#message").css("display", "block");
-    $("#message").empty().append($(document.createElement("div"))
+
+    var $messageElem = $("#message");
+    $messageElem.css("display", "block");
+    $messageElem.empty().append($(document.createElement("div"))
         .addClass("message"));
+
     if (type == 0) {
         $(".message").html(content);
     } else if (type == 1) {
         $(".message").on("click", function () {
             chrome.tabs.create({url: "options.html"});
             window.close();
-        })
-            .append($(document.createElement("div"))
-                .addClass("messagelink").html(content)
+        }).append($(document.createElement("div"))
+                .addClass("messagelink")
+                .html(content)
                 .on("mouseover", function () {
                     $(".message").css("background-color", "#f7f7f7");
                 })
