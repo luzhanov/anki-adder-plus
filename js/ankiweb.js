@@ -62,10 +62,12 @@ function retrieveData(successCallback) {
 
         //-------- Compare and update localStorage data
 
-        var decks_array = new Array();
+        var decks_array = [];
         for (var e in decks) {
-            if (!(e == 1 && decks[e].mid == null && Object.keys(decks).length > 1)) //Automatically tries to find and exclude the default deck if it's unused
+            //Automatically tries to find and exclude the default deck if it's unused
+            if (!(e == 1 && decks[e].mid == null && Object.keys(decks).length > 1)) {
                 decks_array.push(decks[e].name);
+            }
         }
         decks_array.sort();
         var currentDeckExists = false;
@@ -96,7 +98,8 @@ function retrieveData(successCallback) {
         var currentModelExists = false;
 
         for (var n in models) {
-            if (models[n].id == curMod) { //Check if the current model has changed
+            //Check if the current model has changed
+            if (models[n].id == curMod) {
                 for (var f = 1; localStorage["model-fieldName-" + f + ":" + curMod]; f++) {
                     if (!models[n].flds[f - 1]
                         || localStorage["model-fieldName-" + f + ":" + curMod] != models[n].flds[f - 1].name
@@ -129,55 +132,62 @@ function retrieveData(successCallback) {
         }
 
         //Now that updateModelList and updateCurrent are correctly assigned, we can remove all stored information
-
-        for (var key in localStorage) {
-            if ("model" == key.substring(0, 5)) { //Clear all entries beginning with "model"
-                localStorage.removeItem(key);
-            }
-        }
+        removeModelsFromLocalStorage();
 
         //Everything is cleared. Simply add the latest information.
+        addNewModelsToLocalStorage(models);
 
-        for (var n in models) {
-            localStorage["model" + n] = models[n].id;
-            var id = localStorage["model" + n];
-            localStorage["model-name:" + id] = models[n].name;
-
-            //Find the name of the cloze field, if it exists.
-            var clozeFieldName, frontCloze, backCloze, searchCloze;
-            searchCloze = /{{cloze:(.+?)}}/.exec(models[n].tmpls[0].qfmt);
-            if (searchCloze != null) {
-                frontCloze = searchCloze[1];
-            }
-            searchCloze = /{{cloze:(.+?)}}/.exec(models[n].tmpls[0].afmt);
-            if (searchCloze != null) {
-                backCloze = searchCloze[1];
-            }
-            if (frontCloze != undefined && backCloze == frontCloze) {//If the model has a Cloze field
-                clozeFieldName = frontCloze;
-            }
-
-            for (var f in models[n].flds) {
-                localStorage["model-fieldName-" + (+f + 1) + ":" + id] = models[n].flds[f].name;
-                localStorage["model-fieldFont-" + (+f + 1) + ":" + id] = models[n].flds[f].font;
-                localStorage["model-fieldSize-" + (+f + 1) + ":" + id] = models[n].flds[f].size;
-                if (models[n].flds[f].rtl == true)
-                    localStorage["model-fieldRtl-" + (+f + 1) + ":" + id] = models[n].flds[f].rtl;
-                if (models[n].flds[f].sticky == true)
-                    localStorage["model-fieldSticky-" + (+f + 1) + ":" + id] = models[n].flds[f].sticky;
-                if (clozeFieldName == models[n].flds[f].name)
-                    localStorage["model-clozeFieldNum:" + id] = (+f + 1);
-            }
-        }
-        //--------
         currentXhr = null;
 
-        if (updateCurrent)
+        if (updateCurrent) {
             updateContextMenu(); //Update fields in context menu
+        }
 
         successCallback(updateCurrent, updateModelList, updateDeckList);
-
     });
+}
+
+function addNewModelsToLocalStorage(models) {
+    for (var n in models) {
+        localStorage["model" + n] = models[n].id;
+        var id = localStorage["model" + n];
+        localStorage["model-name:" + id] = models[n].name;
+
+        //Find the name of the cloze field, if it exists.
+        var clozeFieldName, frontCloze, backCloze, searchCloze;
+        searchCloze = /{{cloze:(.+?)}}/.exec(models[n].tmpls[0].qfmt);
+        if (searchCloze != null) {
+            frontCloze = searchCloze[1];
+        }
+        searchCloze = /{{cloze:(.+?)}}/.exec(models[n].tmpls[0].afmt);
+        if (searchCloze != null) {
+            backCloze = searchCloze[1];
+        }
+        //If the model has a Cloze field
+        if (frontCloze != undefined && backCloze == frontCloze) {
+            clozeFieldName = frontCloze;
+        }
+
+        for (var f in models[n].flds) {
+            localStorage["model-fieldName-" + (+f + 1) + ":" + id] = models[n].flds[f].name;
+            localStorage["model-fieldFont-" + (+f + 1) + ":" + id] = models[n].flds[f].font;
+            localStorage["model-fieldSize-" + (+f + 1) + ":" + id] = models[n].flds[f].size;
+            if (models[n].flds[f].rtl == true)
+                localStorage["model-fieldRtl-" + (+f + 1) + ":" + id] = models[n].flds[f].rtl;
+            if (models[n].flds[f].sticky == true)
+                localStorage["model-fieldSticky-" + (+f + 1) + ":" + id] = models[n].flds[f].sticky;
+            if (clozeFieldName == models[n].flds[f].name)
+                localStorage["model-clozeFieldNum:" + id] = (+f + 1);
+        }
+    }
+}
+
+function removeModelsFromLocalStorage() {
+    for (var key in localStorage) {
+        if ("model" == key.substring(0, 5)) { //Clear all entries beginning with "model"
+            localStorage.removeItem(key);
+        }
+    }
 }
 
 function addNote(dontClose) {
@@ -189,12 +199,15 @@ function addNote(dontClose) {
         alert(chrome.i18n.getMessage("errorEmptyfirstfield"));
         return;
     }
-    if (clozeN && $("#clozefield").length) {
-        localStorage["field" + clozeN] = getClozeText(true); //Fix ordering of clozes before adding
-    }
-    if (clozeN && !(/{{c1::(.+?)}}/.test(localStorage["field" + clozeN]))) {
-        alert(chrome.i18n.getMessage("errorEmptycloze", localStorage["model-fieldName-" + clozeN + ":" + localStorage["currentModel"]]));
-        return;
+    if (clozeN != -1) {
+        //Fix ordering of clozes before adding
+        if ($("#clozefield").length) {
+            localStorage["field" + clozeN] = getClozeText(true);
+        }
+        if (!(/{{c1::(.+?)}}/.test(localStorage["field" + clozeN]))) {
+            alert(chrome.i18n.getMessage("errorEmptycloze", localStorage["model-fieldName-" + clozeN + ":" + localStorage["currentModel"]]));
+            return;
+        }
     }
 
     //Add to total number of cards added across all users of the extension
@@ -226,8 +239,7 @@ function addNote(dontClose) {
             }
             addNote(dontCloseAfterAdding);
         }, function(errorMessage) {
-                //todo: i18n message
-                alert(errorMessage);
+            alert(chrome.i18n.getMessage(errorMessage));
         });
         return;
     }
@@ -243,8 +255,10 @@ function addNote(dontClose) {
             s = s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&amp;/g, '&').replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
         fields.push(s);
     }
-    if (!localStorage["fieldTags"])
+
+    if (!localStorage["fieldTags"]) {
         localStorage["fieldTags"] = "";
+    }
     var tags = localStorage["fieldTags"].replace(/,/g, ' ');
 
     var data = [fields, tags];
