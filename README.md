@@ -1,4 +1,4 @@
-# anki-adder-fork
+# anki-adder-plus
 Fork of "Anki Adder" Chrome plugin.
 
 v 1.1.0
