@@ -58,9 +58,9 @@
       "16": "images/16.png",
       "48": "images/48.png"
    },
-   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnxIVtu3+skAmihAiRSCGNjr6/AFQFmTOuXuW/Lz8sOGM9+1RKH/MyOE3wj2apn6S0iFMUYvK5pObnoYfzDhW1RffVCx4YCotVG5LOC4NiN8TP8LB6AtiIDVIr+9mV9XAXvf2pddTDNItU4Lp/k7j1PLlxhmFdi7fxqxiB/lmCLtAePF7UL7G1NDYeCg43HrPCXwRHFz00oIs4j9cNB6+TW1v5uczR6wBuIwMiF/ixjrXqi8nEGLc+LYxssn0Ex7D4AzfWqBG8wTqPWB+8RkrMeX4R7gqs/ktBtmLhJWEj2olHOA3EEebr2LhQ1cyUf5QdeS1Dg4eDSsOVMBnrnufeQIDAQAB",
+
    "manifest_version": 2,
-   "name": "Anki Adder Fork",
+   "name": "Anki Adder Plus",
    "options_page": "options.html",
    "permissions": [ "tabs", "http://*/*", "https://*/*", "contextMenus" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
