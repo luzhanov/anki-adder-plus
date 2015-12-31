@@ -19,36 +19,42 @@ chrome.runtime.onInstalled.addListener(function () {
 });
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    var n = +info.menuItemId[3];
-    //addSelectionToField(info.selectionText,n); - not used since it takes away newlines
+    var menuIdxNumber = +info.menuItemId[3];
+    //console.log("Context menu clicked, idx = " + menuIdxNumber, info);
+    onContextMenuClick(menuIdxNumber);
+});
+
+function onContextMenuClick(menuIdx) {
     chrome.tabs.executeScript({
         code: "(typeof window.getSelection===undefined)?undefined:window.getSelection().toString();"
     }, function (selection) {
         if (selection !== undefined)
-            addSelectionToField(selection[0], n);
+            addSelectionToField(selection[0], menuIdx);
         else
             alert(chrome.i18n.getMessage("errorCannotcontext"));
     });
-});
+}
 
-function addSelectionToField(selection, n) {
-    var isClozeField = Boolean(n == localStorage["model-clozeFieldNum:" + localStorage["currentModel"]]);
-    var s = selection;
-    s = s.trim().replace(/(\r|\t|\v|\f)/g, " ").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function addSelectionToField(selectionRaw, menuIdx) {
+    console.log("Adding selection value to field", selectionRaw, menuIdx);
 
-    if (!localStorage["field" + n] || localStorage["field" + n] === "<div><br></div>" || localStorage["field" + n] === "<br>")
-        localStorage["field" + n] = s.replace(/\n/g, "<br>");
-    else
-        localStorage["field" + n] += "<br><br>" + s.replace(/\n/g, "<br>");
+    var isClozeField = Boolean(menuIdx == localStorage["model-clozeFieldNum:" + localStorage["currentModel"]]);
+    var selection = selectionRaw.trim().replace(/(\r|\t|\v|\f)/g, " ").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    if (!localStorage["field" + menuIdx] || localStorage["field" + menuIdx] === "<div><br></div>" || localStorage["field" + menuIdx] === "<br>") {
+        localStorage["field" + menuIdx] = selection.replace(/\n/g, "<br>");
+    } else {
+        localStorage["field" + menuIdx] += "<br><br>" + selection.replace(/\n/g, "<br>");
+    }
 
     //Make the newly added text selected
-    localStorage["caretField"] = n;
+    localStorage["caretField"] = menuIdx;
     if (isClozeField) { //If field is a cloze field
-        var fullLength = htmlToClozeText(localStorage["field" + n]).length;
-        var insertedLength = htmlToClozeText(s.replace(/\n/g, "<br>")).length;
+        var fullLength = htmlToClozeText(localStorage["field" + menuIdx]).length;
+        var insertedLength = htmlToClozeText(selection.replace(/\n/g, "<br>")).length;
         localStorage["caretPos"] = (fullLength - insertedLength) + "->" + (fullLength);
     } else {
-        var splits = s.split("\n");
+        var splits = selection.split("\n");
         var numberOfTextNodes = 0;
         var numberOfNewLines = splits.length - 1;
         for (var i in splits) {
