@@ -20,7 +20,13 @@ chrome.runtime.onInstalled.addListener(function () {
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
     var menuIdxNumber = +info.menuItemId[3];
-    //console.log("Context menu clicked, idx = " + menuIdxNumber, info);
+
+    // commented due the Chrome bug - info.selectionText contains no newLines
+    //var selectionRaw = info.selectionText;
+    //if (selectionRaw !== undefined) {
+    //    addSelectionToField(selectionRaw, menuIdxNumber);
+    //}
+
     onContextMenuClick(menuIdxNumber);
 });
 
@@ -36,6 +42,11 @@ function onContextMenuClick(menuIdx) {
 }
 
 function addSelectionToField(selectionRaw, menuIdx) {
+    if (!selectionRaw) {
+//        alert("Empty selection, please select again");
+        return;
+    }
+
     console.log("Adding selection value to field", selectionRaw, menuIdx);
 
     var isClozeField = Boolean(menuIdx == localStorage["model-clozeFieldNum:" + localStorage["currentModel"]]);
