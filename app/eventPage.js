@@ -31,9 +31,11 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 });
 
 function onContextMenuClick(menuIdx) {
+    chrome.tabs.insertCSS({code: "body {cursor: wait}"});
     chrome.tabs.executeScript({
         code: "(typeof window.getSelection===undefined)?undefined:window.getSelection().toString();"
     }, function (selection) {
+        chrome.tabs.insertCSS({code: "body {cursor: default}"});
         if (selection !== undefined)
             addSelectionToField(selection[0], menuIdx);
         else
