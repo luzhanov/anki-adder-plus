@@ -200,7 +200,7 @@
       "message": "Model (Ctrl+M)"
    },
    "tooltipShortcuts": {
-      "message": "-------Shortcuts-------\nAdd card: Ctrl + Enter\nAdd card without closing: Shift + Enter\n\nEdit in html: Ctrl + Shift + X\n\nUp/Down: Switch between recently\nused models/decks"
+      "message": "-------Shortcuts-------\nAdd card: Ctrl + Enter\nAdd card without closing: Shift + Enter\n\nEdit in html: Ctrl + Shift + X\nSurround selection with cloze: Ctrl + Shift + C\n\nUp/Down: Switch between recently\nused models/decks"
    },
    "tooltipTags": {
       "message": "Anki tags are space separated, but this extension allows comma separation as well."
