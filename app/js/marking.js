@@ -338,12 +338,13 @@ function putLastC(c) {
 
 function clozeUpdateHoverColor() {
     //If ctrl/shift/alt changes while hovering over a word, change the color accordingly.
-    if (ctrl || shift || alt)
+    if (ctrl || shift || alt) {
         $(".w:hover, .p:hover, .s:hover").attr("data-c", lastC[lastC.length - 1]);
-    else if (markingC == 0)
+    } else if (markingC == 0) {
         $(".w:hover, .p:hover, .s:hover").removeAttr("data-c");
-    else
+    } else {
         $(".w:hover, .p:hover, .s:hover").attr("data-c", markingC);
+    }
 }
 
 function getClozeText(normalize, mouseX, mouseY) {

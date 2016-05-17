@@ -190,16 +190,183 @@ function initPopup() {
     });
 }
 
+function convertFromHtmlToNormal() {
+    if ($(document.activeElement).is(".htmlfield")) { //From html to normal
+        var n = $(document.activeElement).attr("data-fieldnum");
+        var start = document.activeElement.selectionStart;
+        var end = document.activeElement.selectionEnd;
+
+        var content = $(document.activeElement).val();
+
+        content.replace(/<.*?>|&\S+?;/g, function (tag, offset) {
+            if (offset < start && offset + tag.length > start) //If caret is inside html tag, move it to nearby text
+                start = offset + tag.length;
+            if (offset < end && offset + tag.length > end) //If caret is inside html tag, move it to nearby text
+                end = offset + tag.length;
+            return tag;
+        });
+
+        var field = createField(n);
+        $(document.activeElement).replaceWith(field);
+        saveSelection(n);
+        setTimeout(function () {
+            if (document.activeElement == document.body) saveSelection(-1);
+        }, 280);
+        updateScrollWidth();
+
+        //Insert temporary "caret" elements for the edge positions of current selection
+        if (start == end)
+            field.get(0).innerHTML = content.slice(0, start) + "<caret></caret>" + content.slice(start);
+        else
+            field.get(0).innerHTML = content.slice(0, start) + "<caret></caret>" + content.slice(start, end) + "<caret></caret>" + content.slice(end);
+
+        var nodeStart;
+        var nodeEnd;
+        for (var pos = 0; (pos == 0 || (pos == 1 && start != end)); pos++) {
+            var caretElement = $("caret").first();
+            var node = caretElement.get(0);
+            while (node && node.nodeType != 3 && $(node).parents(field).length) {
+                var child = node;
+                if ($(node).text()) {
+                    for (var i in node.childNodes) {
+                        if ($(node.childNodes[i]).text()) {
+                            node = node.childNodes[i];
+                            break;
+                        }
+                    }
+                } else {
+                    if (node.nextSibling !== null) {
+                        node = node.nextSibling;
+                    } else {
+                        while (node.nextSibling === null)
+                            node = node.parentNode;
+                        node = node.nextSibling;
+                    }
+                }
+            }
+            if (!$(node).parents().is(field) && pos == 0) //If node is outside of the field, and is the start node
+                node = null;
+
+            if (pos == 0) {
+                nodeStart = node;
+                if (start == end)
+                    nodeEnd = node;
+                caretElement.remove();
+            } else {
+                nodeEnd = node;
+                $("caret").remove();
+            }
+        }
+
+        if (field.get(0).innerHTML.replace(/<caret><\/caret>/g, "") != field.get(0).innerHTML)
+            field.get(0).innerHTML = field.get(0).innerHTML.replace(/<caret><\/caret>/g, "");
+
+        $(field).focus();
+
+        if (node) {
+            var anchorNode = nodeStart;
+            var focusNode = nodeEnd;
+            var anchorOffset = 0;
+            var focusOffset = 0;
+
+            var s = window.getSelection();
+            s.collapse(anchorNode, anchorOffset);
+            s.extend(focusNode, focusOffset);
+        } else {
+            placeCaretAtEnd(n);
+        }
+
+    } else //From normal to html
+    if ($(document.activeElement).is(".field")) {
+        editHTML($(document.activeElement).attr("data-fieldnum"));
+    }
+    return field;
+}
+
+function addClozeBracketsAroundSelection(e) {
+    // Adds cloze brackets around selection
+
+    var text; //Text in the field
+    var content; //Selected content that should be inside {{}} brackets.
+
+    e.preventDefault();
+    var field = $(document.activeElement);
+    if (field.is(".field")) {
+        text = field.text();
+    } else if (field.is(".htmlfield, #clozearea")) {
+        text = field.val();
+    } else {
+        return false;
+    }
+
+    var c;
+    var used_c = [];
+    var highest_c = 1;
+    text.replace(/{{c([1-9]|10)::(.+?)}}/g, function (str, n, cloze) {
+        n = Number(n);
+        used_c[n] = true;
+        if (n > highest_c)
+            highest_c = n;
+        return str;
+    });
+    if (alt) {
+        c = highest_c;
+    } else {
+        for (var i = 1; i <= 10; i++) {
+            if (!used_c[i]) {
+                c = i;
+                break;
+            }
+        }
+    }
+    if (c === undefined)
+        return false;
+
+    if (field.is(".field")) {
+        var s = window.getSelection();
+        content = s.toString();
+        if (content) {
+            document.execCommand("insertText", false, "{{c" + c + "::" + content + "}}");
+        } else {
+            document.execCommand("insertText", false, "{{c" + c + "::}}");
+            s.modify("move", "backward", "character"); //Move the caret to {{c1::|}}
+            s.modify("move", "backward", "character"); //                        ^
+        }
+    } else {
+        var area = field.get(0);
+        var sp = area.selectionStart;
+        var ep = area.selectionEnd;
+        content = area.value.substring(sp, ep);
+
+        var event = document.createEvent('TextEvent');
+        var input = "{{c" + c + "::" + content + "}}";
+        event.initTextEvent('textInput', true, true, null, input);
+        area.dispatchEvent(event);
+        if (sp == ep) { //If no text was selected
+            var pos = sp + ("{{c" + c + "::").length;
+            area.setSelectionRange(pos, pos); //Move caret
+        }
+    }
+
+    return true;
+}
+
 function initKeyShortcuts() {
     $(document).keydown(function (e) {
         ctrl = e.ctrlKey;
         shift = e.shiftKey;
         alt = e.altKey;
-        //alert(e.which);
+        //chrome.extension.getBackgroundPage().console.log("Document keydown", e);
 
-        clozeUpdateHoverColor();
+        try {
+            clozeUpdateHoverColor(); //todo: find the cause of this bug - "clozeUpdateHoverColor is not defined"
+        } catch(err) {
+            chrome.extension.getBackgroundPage().console.log(err);
+        }
 
         if ((ctrl || shift) && e.which == 13) { //Ctrl/Shift + Enter
+            chrome.extension.getBackgroundPage().console.log("Ctrl+enter pressed");
+
             if ($(".addcardbutton").length) {
                 $(":focus").blur();
                 addNote();
@@ -207,160 +374,13 @@ function initKeyShortcuts() {
         }
 
         if (ctrl && shift && e.which == 88) { //Ctrl + Shift + X
-            if ($(document.activeElement).is(".htmlfield")) { //From html to normal
-                var n = $(document.activeElement).attr("data-fieldnum");
-                var start = document.activeElement.selectionStart;
-                var end = document.activeElement.selectionEnd;
-
-                var content = $(document.activeElement).val();
-
-                content.replace(/<.*?>|&\S+?;/g, function (tag, offset) {
-                    if (offset < start && offset + tag.length > start) //If caret is inside html tag, move it to nearby text
-                        start = offset + tag.length;
-                    if (offset < end && offset + tag.length > end) //If caret is inside html tag, move it to nearby text
-                        end = offset + tag.length;
-                    return tag;
-                });
-
-                var field = createField(n);
-                $(document.activeElement).replaceWith(field);
-                saveSelection(n);
-                setTimeout(function () {
-                    if (document.activeElement == document.body) saveSelection(-1);
-                }, 280);
-                updateScrollWidth();
-
-                //Insert temporary "caret" elements for the edge positions of current selection
-                if (start == end)
-                    field.get(0).innerHTML = content.slice(0, start) + "<caret></caret>" + content.slice(start);
-                else
-                    field.get(0).innerHTML = content.slice(0, start) + "<caret></caret>" + content.slice(start, end) + "<caret></caret>" + content.slice(end);
-
-                var nodeStart;
-                var nodeEnd;
-                for (var pos = 0; (pos == 0 || (pos == 1 && start != end)); pos++) {
-                    var caretElement = $("caret").first();
-                    var node = caretElement.get(0);
-                    while (node && node.nodeType != 3 && $(node).parents(field).length) {
-                        var child = node;
-                        if ($(node).text()) {
-                            for (var i in node.childNodes) {
-                                if ($(node.childNodes[i]).text()) {
-                                    node = node.childNodes[i];
-                                    break;
-                                }
-                            }
-                        } else {
-                            if (node.nextSibling !== null) {
-                                node = node.nextSibling;
-                            } else {
-                                while (node.nextSibling === null)
-                                    node = node.parentNode;
-                                node = node.nextSibling;
-                            }
-                        }
-                    }
-                    if (!$(node).parents().is(field) && pos == 0) //If node is outside of the field, and is the start node
-                        node = null;
-
-                    if (pos == 0) {
-                        nodeStart = node;
-                        if (start == end)
-                            nodeEnd = node;
-                        caretElement.remove();
-                    } else {
-                        nodeEnd = node;
-                        $("caret").remove();
-                    }
-                }
-
-                if (field.get(0).innerHTML.replace(/<caret><\/caret>/g, "") != field.get(0).innerHTML)
-                    field.get(0).innerHTML = field.get(0).innerHTML.replace(/<caret><\/caret>/g, "");
-
-                $(field).focus();
-
-                if (node) {
-                    var anchorNode = nodeStart;
-                    var focusNode = nodeEnd;
-                    var anchorOffset = 0;
-                    var focusOffset = 0;
-
-                    var s = window.getSelection();
-                    s.collapse(anchorNode, anchorOffset);
-                    s.extend(focusNode, focusOffset);
-                } else {
-                    placeCaretAtEnd(n);
-                }
-
-            } else //From normal to html
-            if ($(document.activeElement).is(".field")) {
-                editHTML($(document.activeElement).attr("data-fieldnum"));
-            }
+            var field = convertFromHtmlToNormal();
         }
 
         if (ctrl && shift && e.which == 67) { //Ctrl + Shift + C
-            // Adds cloze brackets around selection
-
-            var text; //Text in the field
-            var content; //Selected content that should be inside {{}} brackets.
-
-            e.preventDefault();
-            var field = $(document.activeElement);
-            if (field.is(".field")) {
-                text = field.text();
-            } else if (field.is(".htmlfield, #clozearea")) {
-                text = field.val();
-            } else {
+            var result = addClozeBracketsAroundSelection(e);
+            if (!result) {
                 return;
-            }
-
-            var c;
-            var used_c = [];
-            var highest_c = 1;
-            text.replace(/{{c([1-9]|10)::(.+?)}}/g, function (str, n, cloze) {
-                n = Number(n);
-                used_c[n] = true;
-                if (n > highest_c)
-                    highest_c = n;
-                return str;
-            });
-            if (alt) {
-                c = highest_c;
-            } else {
-                for (var i = 1; i <= 10; i++) {
-                    if (!used_c[i]) {
-                        c = i;
-                        break;
-                    }
-                }
-            }
-            if (c === undefined)
-                return;
-
-            if (field.is(".field")) {
-                var s = window.getSelection();
-                content = s.toString();
-                if (content) {
-                    document.execCommand("insertText", false, "{{c" + c + "::" + content + "}}");
-                } else {
-                    document.execCommand("insertText", false, "{{c" + c + "::}}");
-                    s.modify("move", "backward", "character"); //Move the caret to {{c1::|}}
-                    s.modify("move", "backward", "character"); //                        ^
-                }
-            } else {
-                var area = field.get(0);
-                var sp = area.selectionStart;
-                var ep = area.selectionEnd;
-                content = area.value.substring(sp, ep);
-
-                var event = document.createEvent('TextEvent');
-                var input = "{{c" + c + "::" + content + "}}";
-                event.initTextEvent('textInput', true, true, null, input);
-                area.dispatchEvent(event);
-                if (sp == ep) { //If no text was selected
-                    var pos = sp + ("{{c" + c + "::").length;
-                    area.setSelectionRange(pos, pos); //Move caret
-                }
             }
         }
 
@@ -448,6 +468,7 @@ function generateFields() {
 
     for (var n = 1; localStorage["model-fieldName-" + n + ":" + id]; n++) {
         fieldsElement.append($(document.createElement("div")).addClass("fname")
+                .attr('title', chrome.i18n.getMessage("tooltipShortcuts"))
                 .append(document.createTextNode(localStorage["model-fieldName-" + n + ":" + id]))
         );
         if (localStorage["model-clozeFieldNum:" + id] == n) { //Clozefield
