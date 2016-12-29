@@ -452,7 +452,7 @@ function clozeField() {
     updateScrollWidth();
 }
 
-function htmlToClozeText(s) { //Same as in eventPage.js
+function htmlToClozeText(s) { //Same as in eventPage.js //todo: extract duplicate
     changedWhileCloze = true;
     if (s === undefined || s == "<br>")
         return "";

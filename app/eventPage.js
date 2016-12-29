@@ -105,7 +105,7 @@ function updateContextMenu() { //Same as in ankiweb.js
     });
 }
 
-function htmlToClozeText(s) { //Same as in marking.js
+function htmlToClozeText(s) { //Same as in marking.js //todo: extract duplicate
     if (s === undefined || s == "<br>")
         return "";
     else

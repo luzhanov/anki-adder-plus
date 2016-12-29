@@ -265,38 +265,44 @@ function addNote(dontClose) {
     //In Anki, tags are space separated only. This means that if you write like this [a, b, c] the card will have the tags 'a,' 'b,' and 'c'.
     //This problem exists in all versions of Anki, but to counteract it at least in this version, all ',' are replaced with spaces
 
-    var dict = {
+    var newCardData = {
         data: JSON.stringify(data),
         mid: $("[name=model]").val(), //model id
         deck: (returnDeck ? localStorage["currentDeck"] : $("[name=deck]").val())
     };
 
-    currentXhr = $.get('https://ankiweb.net/edit/save',
-        dict,
-        function (data, textStatus) {
-            if (textStatus == 'error') {
-                alert(chrome.i18n.getMessage("errorCard"));
-                return;
-            }
-            $(".loadinggifsmall").stop(true).fadeOut(400);
-            $(".loadinggif").stop(true).fadeTo(60, 0, function () {
-                $(this).css("display", "none")
-            });
-            $(".buttonready").stop(true).fadeTo(100, 1, function () {
-                $(this).css({"display": "block", "opacity": "1"})
-            });
+    showMessage(0, 'ankiErrorMsg');
 
-            clearFields();
-            currentXhr = null;
-            saveCombo(); //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
-            localStorage["caretField"] = 1;
-            localStorage["caretPos"] = 0;
-            loadSelection();
-            if (dontCloseAfterAdding)//If shift was held when the button was pressed
-                $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
-            else
-                window.close();
-        });
+    //currentXhr = $.post('https://ankiweb.net/edit/save',
+    //    newCardData,
+    //    function (data, textStatus) {
+    //        if (textStatus == 'error') {
+    //            alert(chrome.i18n.getMessage("errorCard"));
+    //            return;
+    //        }
+    //        $(".loadinggifsmall").stop(true).fadeOut(400);
+    //        $(".loadinggif").stop(true).fadeTo(60, 0, function () {
+    //            $(this).css("display", "none")
+    //        });
+    //        $(".buttonready").stop(true).fadeTo(100, 1, function () {
+    //            $(this).css({"display": "block", "opacity": "1"})
+    //        });
+    //
+    //        clearFields();
+    //        currentXhr = null;
+    //        //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
+    //        saveCombo();
+    //        localStorage["caretField"] = 1;
+    //        localStorage["caretPos"] = 0;
+    //        loadSelection();
+    //
+    //        //If shift was held when the button was pressed
+    //        if (dontCloseAfterAdding) {
+    //            $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
+    //        } else {
+    //            window.close();
+    //        }
+    //    });
 }
 
 function loadTranslation() {
@@ -367,7 +373,7 @@ function detailedDeckNames() {
     }
 }
 
-function updateContextMenu() { //Same as in eventPage.js
+function updateContextMenu() { //Same as in eventPage.js //todo: extract duplicate
     chrome.commands.getAll(function (coms) {
         chrome.contextMenus.removeAll(function () {
             if (localStorage["model-fieldName-" + 1 + ":" + localStorage["currentModel"]] === undefined) {

@@ -351,6 +351,20 @@ function addClozeBracketsAroundSelection(e) {
     return true;
 }
 
+function isCurrentFieldEmpty() {
+    var active = $(document.activeElement);
+    var fieldnum = (active.is(".field") ? active.attr("data-fieldnum") : active.is("#clozearea") ? clozeN : active.is("#tags") ? "Tags" : 0);
+    if (fieldnum) {
+        var currentFieldIsEmpty = ((clozeN == fieldnum && $(active).val() == "")
+        || (fieldnum == "Tags" && localStorage["fieldTags"] == "")
+        || ($(".field[data-fieldnum=" + fieldnum + "]").text() == ""
+        && $(".field[data-fieldnum=" + fieldnum + "]").html() !== null
+        && $(".field[data-fieldnum=" + fieldnum + "]").html().split("br").length < 3));
+        // !localStorage["field"+fieldnum];
+    }
+    return currentFieldIsEmpty;
+}
+
 function initKeyShortcuts() {
     $(document).keydown(function (e) {
         ctrl = e.ctrlKey;
@@ -360,7 +374,7 @@ function initKeyShortcuts() {
 
         try {
             clozeUpdateHoverColor(); //todo: find the cause of this bug - "clozeUpdateHoverColor is not defined"
-        } catch(err) {
+        } catch (err) {
             chrome.extension.getBackgroundPage().console.log(err);
         }
 
@@ -383,11 +397,8 @@ function initKeyShortcuts() {
                 return;
             }
         }
+        var currentFieldIsEmpty = isCurrentFieldEmpty();
 
-        var a = $(document.activeElement);
-        var fieldnum = (a.is(".field") ? a.attr("data-fieldnum") : a.is("#clozearea") ? clozeN : a.is("#tags") ? "Tags" : 0);
-        if (fieldnum)
-            var currentFieldIsEmpty = ((clozeN == fieldnum && $(a).val() == "") || (fieldnum == "Tags" && localStorage["fieldTags"] == "") || ($(".field[data-fieldnum=" + fieldnum + "]").text() == "" && $(".field[data-fieldnum=" + fieldnum + "]").html() !== null && $(".field[data-fieldnum=" + fieldnum + "]").html().split("br").length < 3)); // !localStorage["field"+fieldnum];
         if (document.activeElement == document.body || currentFieldIsEmpty) {
             if (e.which == 38) { //Up
                 if (localStorage["combo" + (+comboLevel + 1)]) {//If there is a higher level
