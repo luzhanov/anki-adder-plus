@@ -271,6 +271,8 @@ function addNote(dontClose) {
         deck: (returnDeck ? localStorage["currentDeck"] : $("[name=deck]").val())
     };
 
+    //todo: use https://github.com/Agnostic/LocalDB.js here
+
     showMessage(0, 'ankiErrorMsg');
 
     //currentXhr = $.post('https://ankiweb.net/edit/save',
