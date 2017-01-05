@@ -211,7 +211,7 @@ function addNote(dontClose) {
     }
 
     //Add to total number of cards added across all users of the extension
-    _gaq.push(['_trackEvent', 'Skapade kort', chrome.i18n.getMessage("@@ui_locale")]);
+    ga('send', 'event', 'addnote');
 
     $(".addcardbutton").addClass("addcardbuttondown").removeClass("addcardbutton");
     $(".buttonready").delay(600).fadeTo(300, 0, function () {

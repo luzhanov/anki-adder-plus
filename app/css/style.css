@@ -206,35 +206,56 @@ hr {
 	margin-top: 5px;
 }
 
-.addcardbutton, .addcardbuttondown  {
+.cardbutton {
 	margin-left: 10px;
-	
-	background-color: #335dc7;
-	color: white;
-	
+
 	padding: 5px;
 	border-radius: 3px;
 	box-shadow: 0 0 5px gray;
 	font-weight: bold;
 	font-family: sans-serif;
-	height: 32px;
 	text-align: center;
 	text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
 	min-width:72px;
 }
 
-.addcardbutton:hover {
-	background-color: #4378fe;
+.cardbutton:hover {
 	cursor: pointer;
 	box-shadow: 0 0 6px gray;
 }
 
-.addcardbuttondown {
-	background-color: #004081;
+.cardbuttondown {
 	cursor: pointer;
 	box-shadow: 0 0 6px gray;
 	padding-top: 6px;
 	padding-bottom: 4px;
+}
+
+.addcardbutton, .addcardbuttondown  {
+	background-color: #335dc7;
+	color: white;
+}
+
+.addcardbutton:hover {
+	background-color: #4378fe;
+}
+
+.addcardbuttondown {
+	background-color: #004081;
+}
+
+.exportcardbutton, .exportcardbuttondown  {
+	background-color: #f9b845;
+	color: black;
+	padding-top: 12px;
+}
+
+.exportcardbutton:hover {
+	background-color: #ffbd46;
+}
+
+.exportcardbuttondown {
+	background-color: #d7a03b;
 }
 
 .addcardsub {

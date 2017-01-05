@@ -3,7 +3,10 @@
       "message": "Add cards to Anki directly from Chrome"
    },
    "buttonAddcard": {
-      "message": "Add Card"
+      "message": "Add to DB"
+   },
+   "buttonExportfile": {
+      "message": "Export to file"
    },
    "buttonCancelling": {
       "message": "Cancelling..."
