@@ -1,6 +1,6 @@
 {
    "appDesc": {
-      "message": "Add cards to Anki directly from Chrome"
+      "message": "Save cards and export them to Anki"
    },
    "buttonAddcard": {
       "message": "Add to DB"
@@ -80,7 +80,7 @@
       "message": "Keyboard shortcuts"
    },
    "opAuthor": {
-      "message": "by Hannes von Essen, Igor Luzhanov"
+      "message": "by Igor Luzhanov, Hannes von Essen"
    },
    "opEmailID": {
       "message": "Email/ID: "
