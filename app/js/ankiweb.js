@@ -271,9 +271,39 @@ function addNote(dontClose) {
         deck: (returnDeck ? localStorage["currentDeck"] : $("[name=deck]").val())
     };
 
+    //saving note to the deck DB
+    var deckDb = new LDB.Collection(newCardData.deck);
+
+    deckDb.save(newCardData, function(_item){
+        console.log('Card added:', _item);
+
+        $(".loadinggifsmall").stop(true).fadeOut(400);
+        $(".loadinggif").stop(true).fadeTo(60, 0, function () {
+            $(this).css("display", "none")
+        });
+        $(".buttonready").stop(true).fadeTo(100, 1, function () {
+            $(this).css({"display": "block", "opacity": "1"})
+        });
+
+        clearFields();
+
+        //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
+        saveCombo();
+        localStorage["caretField"] = 1;
+        localStorage["caretPos"] = 0;
+        loadSelection();
+
+        //If shift was held when the button was pressed
+        if (dontCloseAfterAdding) {
+            $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
+        } else {
+            window.close();
+        }
+    });
+
     //todo: use https://github.com/Agnostic/LocalDB.js here
 
-    showMessage(0, 'ankiErrorMsg');
+    //showMessage(0, 'ankiErrorMsg');
 
     //currentXhr = $.post('https://ankiweb.net/edit/save',
     //    newCardData,
