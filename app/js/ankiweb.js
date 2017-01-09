@@ -247,12 +247,19 @@ function addNote(dontClose) {
     var fields = [];
     for (var i = 1; localStorage["model-fieldName-" + i + ":" + localStorage["currentModel"]]; i++) {
         var s = localStorage["field" + i];
-        if (s === null || s === undefined)
+        if (s === null || s === undefined) {
             s = "";
-        else
-            s = s.replace(/(\r|\t|\v|\f)/g, " ");
+        } else {
+            s = replaceSpecialWithSpace(s);
+        }
         if (i == clozeN)
-            s = s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&amp;/g, '&').replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+            s = s.replace(/&lt;/g, "<")
+                .replace/&gt;/g, ">")
+                .replace(/&amp;/g, "&")
+                .replace(/&amp;/g, '&')
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\n/g, "<br>");
         fields.push(s);
     }
 

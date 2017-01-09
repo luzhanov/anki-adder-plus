@@ -56,7 +56,10 @@ function addSelectionToField(selectionRaw, menuIdx) {
     console.log("Adding selection value to field", selectionRaw, menuIdx);
 
     var isClozeField = Boolean(menuIdx == localStorage["model-clozeFieldNum:" + localStorage["currentModel"]]);
-    var selection = selectionRaw.trim().replace(/(\r|\t|\v|\f)/g, " ").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var selection = selectionRaw.trim()
+        .replace(/(\r|\t|\v|\f)/g, " ")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 
     if (!localStorage["field" + menuIdx] || localStorage["field" + menuIdx] === "<div><br></div>" || localStorage["field" + menuIdx] === "<br>") {
         localStorage["field" + menuIdx] = selection.replace(/\n/g, "<br>");
@@ -67,23 +70,16 @@ function addSelectionToField(selectionRaw, menuIdx) {
     //Make the newly added text selected
     localStorage["caretField"] = menuIdx;
     if (isClozeField) { //If field is a cloze field
-        var fullLength = htmlToClozeText(localStorage["field" + menuIdx]).length;
-        var insertedLength = htmlToClozeText(selection.replace(/\n/g, "<br>")).length;
+        var fullLength = convertHtmlToCloze(localStorage["field" + menuIdx]).length;
+        var insertedLength = convertHtmlToCloze(selection.replace(/\n/g, "<br>")).length;
         localStorage["caretPos"] = (fullLength - insertedLength) + "->" + (fullLength);
     } else {
-        var splits = selection.split("\n");
-        var numberOfTextNodes = 0;
-        var numberOfNewLines = splits.length - 1;
-        for (var i in splits) {
-            if (splits[i] != "")
-                numberOfTextNodes++;
-        }
-        var nodes = numberOfTextNodes + numberOfNewLines;
+        var nodes = calculateNodeCount(selection);
         localStorage["caretPos"] = "fromend:" + nodes;
     }
 }
 
-function updateContextMenu() { //Same as in ankiweb.js
+function updateContextMenu() { //Same as in ankiweb.js //todo: extract duplicate
     chrome.commands.getAll(function (coms) {
         chrome.contextMenus.removeAll(function () {
             if (localStorage["model-fieldName-" + 1 + ":" + localStorage["currentModel"]] === undefined) {
@@ -107,11 +103,4 @@ function updateContextMenu() { //Same as in ankiweb.js
             }
         });
     });
-}
-
-function htmlToClozeText(s) { //Same as in marking.js //todo: extract duplicate
-    if (s === undefined || s == "<br>")
-        return "";
-    else
-        return s.replace(/^<div>(<br><\/div>)?/, "").replace(/<div><br><\/div>/g, "\n").replace(/<div>/g, "\n").replace(/<br>/g, "\n").replace(/<.*?>/g, "").replace(/&nbsp;/g, " ");
 }

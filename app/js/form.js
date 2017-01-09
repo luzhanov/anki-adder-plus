@@ -303,6 +303,7 @@ function addClozeBracketsAroundSelection(e) {
     var c;
     var used_c = [];
     var highest_c = 1;
+    //todo: extract as utility method
     text.replace(/{{c([1-9]|10)::(.+?)}}/g, function (str, n, cloze) {
         n = Number(n);
         used_c[n] = true;
@@ -911,9 +912,14 @@ function allFieldsAreEmpty() {
     return true;
 }
 
+//todo: move to utility class & test
 function clozeFieldIsEmpty() {
     //Empty counts as what will not be displayed properly in the clozefield
-    return (!localStorage["field" + clozeN] || localStorage["field" + clozeN] === "<br>" || localStorage["field" + clozeN] === "<div><br></div>" || localStorage["field" + clozeN] === " " || localStorage["field" + clozeN] === "&nbsp;");
+    return !localStorage["field" + clozeN]
+        || localStorage["field" + clozeN] === "<br>"
+        || localStorage["field" + clozeN] === "<div><br></div>"
+        || localStorage["field" + clozeN] === " "
+        || localStorage["field" + clozeN] === "&nbsp;";
 }
 
 function clearFields() {

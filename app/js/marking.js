@@ -13,8 +13,14 @@ var changedWhileCloze = false; //True if clozefield has been changed since gener
 function splitText(id, searchForClozeMarkup, text) {
     //2 arguments: Splits the span 'id'
     if (arguments.length == 2) {
-        splitText(id, searchForClozeMarkup, id.innerHTML.replace(/&nbsp;/g, ' ').replace(/(\r|\t|\v|\f)/g, " ")
-            .replace(/&amp;/g, '&').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+        splitText(id,
+            searchForClozeMarkup,
+            id.innerHTML.replace(/&nbsp;/g, ' ')
+                .replace(/(\r|\t|\v|\f)/g, " ")
+                .replace(/&amp;/g, '&')
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>'));
         $(id).remove();
     } else {
         //3 arguments: Splits in text before the span 'id'
@@ -188,22 +194,8 @@ function updateLayout() {
     $("#clozefield .s").last().remove(); //Temporary spaces to get correct repositioning in the beginning and at the end
 }
 
-function isP(character) { //Returns whether a character is a punctuation
-    return /[.!?:,;_'"”“´`()\[\]{}<>*+|$%&/\\\-]/.test(character);
-}
-
 function isEarlier(idA, idB) { //Returns whether idA comes before idB
     return (idB.compareDocumentPosition(idA) & Node.DOCUMENT_POSITION_PRECEDING);
-}
-
-function getWPSN(character) { //Returns which type a single character is, excluding the cloze type.
-    if (character == ' ')
-        return 's';
-    if (character == '\n')
-        return 'n';
-    if (isP(character))
-        return 'p';
-    return 'w';
 }
 
 function wordMouseDown(id) {
@@ -404,11 +396,15 @@ function clozeArea(mouseX, mouseY) {
         updateAreaHeight(document.getElementById("clozearea"));
         updateScrollWidth();
     }, 'blur': function () {
-        if (!clozeFieldIsEmpty()) //If not empty
+        //If not empty
+        if (!clozeFieldIsEmpty()) {
             clozeField();
+        }
         saveSelection(clozeN);
         setTimeout(function () {
-            if (document.activeElement == document.body) saveSelection(-1);
+            if (document.activeElement == document.body) {
+                saveSelection(-1);
+            }
         }, 280);
     }, 'focus': function () {
         if (clozeCaret !== null) {
@@ -451,11 +447,7 @@ function clozeField() {
     updateScrollWidth();
 }
 
-function htmlToClozeText(s) { //Same as in eventPage.js //todo: extract duplicate
+function htmlToClozeText(s) {
     changedWhileCloze = true;
-    if (s === undefined || s == "<br>")
-        return "";
-    else
-        return s.replace(/^<div>(<br><\/div>)?/, "").replace(/<div><br><\/div>/g, "\n").replace(/<div>/g, "\n")
-            .replace(/<br>/g, "\n").replace(/<.*?>/g, "").replace(/&nbsp;/g, " ");
+    return convertHtmlToCloze(s);
 }
