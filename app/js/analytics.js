@@ -1,5 +1,5 @@
 var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-49003917-1']);
+_gaq.push(['_setAccount', 'UA-89894081-1']);
 _gaq.push(['_trackPageview']);
 
 /*Google Analytics for measuring total number of cards created with the extension*/

@@ -3,6 +3,10 @@ Fork of "Anki Adder" Chrome plugin.
 
 Plugin in ChromeStore: https://chrome.google.com/webstore/detail/anki-adder-plus/ahdmkklclpffcjgfllibcojofffgdagd 
 
+Version 1.1.5
+- Minor fixes, analytics updates
+- Unsupported language removed
+
 Version 1.1.4
 - Temporary fix till the introducing local saving
 

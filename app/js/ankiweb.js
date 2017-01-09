@@ -211,7 +211,7 @@ function addNote(dontClose) {
     }
 
     //Add to total number of cards added across all users of the extension
-    _gaq.push(['_trackEvent', 'Skapade kort', chrome.i18n.getMessage("@@ui_locale")]);
+    _gaq.push(['_trackEvent', 'Card_added', chrome.i18n.getMessage("@@ui_locale")]);
 
     $(".addcardbutton").addClass("addcardbuttondown").removeClass("addcardbutton");
     $(".buttonready").delay(600).fadeTo(300, 0, function () {
@@ -289,6 +289,7 @@ function addNote(dontClose) {
         function (data, textStatus) {
             if (textStatus == 'error') {
                 alert(chrome.i18n.getMessage("errorCard"));
+                _gaq.push(['_trackEvent', 'Card_add_error']);
                 return;
             }
             $(".loadinggifsmall").stop(true).fadeOut(400);

@@ -6,10 +6,12 @@ chrome.commands.onCommand.addListener(function (command) {
         code: "(typeof window.getSelection===undefined)?undefined:window.getSelection().toString();"
     }, function (selection) {
         console.log("selection onCommand", selection);
-        if (selection !== undefined)
+        if (selection !== undefined) {
+            _gaq.push(['_trackEvent', 'Insert', 'field_command']);
             addSelectionToField(selection[0], n);
-        else
+        } else {
             alert(chrome.i18n.getMessage("errorCannotshortcuts"));
+        }
     });
 
 });
@@ -36,10 +38,12 @@ function onContextMenuClick(menuIdx) {
         code: "(typeof window.getSelection===undefined)?undefined:window.getSelection().toString();"
     }, function (selection) {
         chrome.tabs.insertCSS({code: "body {cursor: default}"});
-        if (selection !== undefined)
+        if (selection !== undefined) {
+            _gaq.push(['_trackEvent', 'Insert', "field_menu"]);
             addSelectionToField(selection[0], menuIdx);
-        else
+        } else {
             alert(chrome.i18n.getMessage("errorCannotcontext"));
+        }
     });
 }
 

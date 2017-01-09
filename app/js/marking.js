@@ -422,6 +422,7 @@ function clozeArea(mouseX, mouseY) {
 }
 
 function clozeField() {
+    _gaq.push(['_trackEvent', 'Cloze', 'field']);
     $("#clozearea").replaceWith($(document.createElement("div")).attr({"id": "clozefield", "tabindex": "0"})
             .append($(document.createElement("span"))
                 .text($("#clozearea").val())

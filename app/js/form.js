@@ -284,6 +284,7 @@ function convertFromHtmlToNormal() {
 }
 
 function addClozeBracketsAroundSelection(e) {
+    _gaq.push(['_trackEvent', 'Cloze', 'around_selection']);
     // Adds cloze brackets around selection
 
     var text; //Text in the field
@@ -536,6 +537,7 @@ function createField(n) {
         })
         .html(content)
         .on({'paste': function (e) {
+            _gaq.push(['_trackEvent', 'Insert', 'field_paste']);
             var text = e.originalEvent.clipboardData.getData('text/plain');
             if (!validPaste(text, font, size)) { //Prevent pasting formatted html, other than between fields with the same font and size
                 e.preventDefault();
@@ -623,7 +625,11 @@ function updateAreaHeight(id) { //Adjust area to fit content
 
 function validPaste(text, font, size) {
     //Checks whether pasting comes from a field with the same font and size
-    return (text !== undefined && localStorage["lastCopyText"] !== undefined && text.replace(/\s/g, "") == localStorage["lastCopyText"].replace(/\s/g, "") && font == localStorage["lastCopyFont"] && size == localStorage["lastCopySize"])
+    return (text !== undefined
+        && localStorage["lastCopyText"] !== undefined
+        && text.replace(/\s/g, "") == localStorage["lastCopyText"].replace(/\s/g, "")
+        && font == localStorage["lastCopyFont"]
+        && size == localStorage["lastCopySize"])
 }
 
 function saveSelection(fieldnum) {
