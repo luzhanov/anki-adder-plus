@@ -254,7 +254,7 @@ function addNote(dontClose) {
         }
         if (i == clozeN)
             s = s.replace(/&lt;/g, "<")
-                .replace/&gt;/g, ">")
+                .replace(/&gt;/g, ">")
                 .replace(/&amp;/g, "&")
                 .replace(/&amp;/g, '&')
                 .replace(/</g, "&lt;")
@@ -350,12 +350,14 @@ function detailedDeckNames() {
             var trail = full.split("::"); //Full deck name separated
             var level = trail.length - 1;
             var deck = trail[trail.length - 1]; //Single deck name
-            if (deckLevel[deck] === undefined)
+            if (deckLevel[deck] === undefined) {
                 deckLevel[deck] = [];
-            else if (deckLevel[deck][level] !== undefined && deckLevel[deck][level].length == 1) //If a namesake on the same level is found
+            } else if (deckLevel[deck][level] !== undefined && deckLevel[deck][level].length == 1) {//If a namesake on the same level is found
                 namesakes.push({"deck": deck, "level": level});
-            if (deckLevel[deck][level] === undefined)
+            }
+            if (deckLevel[deck][level] === undefined) {
                 deckLevel[deck][level] = [];
+            }
             deckLevel[deck][level].push(full);
         }
     }
@@ -369,10 +371,11 @@ function detailedDeckNames() {
                 noNamesakes = true;
                 for (var j in deckLevel[deck][level]) { //Make sure there are no namesakes at the next level
                     var current = deckLevel[deck][level][j].split("::")[newlevel];
-                    if (names[current])
+                    if (names[current]) {
                         noNamesakes = false;
-                    else
+                    } else {
                         names[current] = true;
+                    }
                 }
             }
         } else {

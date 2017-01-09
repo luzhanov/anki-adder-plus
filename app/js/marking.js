@@ -309,9 +309,12 @@ function markText() {
 
 function getLowestC(generateLastC) { //Returns the lowest non-used c-value
     for (var i = 1; i <= 10; i++) {
-        if (!$(".c[data-c=" + i + "]").length) return String(i);
-        if (generateLastC)
+        if (!$(".c[data-c=" + i + "]").length) {
+            return String(i);
+        }
+        if (generateLastC) {
             putLastC(i);
+        }
     }
     return 0;
 }
