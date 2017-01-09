@@ -271,38 +271,49 @@ function addNote(dontClose) {
         deck: (returnDeck ? localStorage["currentDeck"] : $("[name=deck]").val())
     };
 
-    showMessage(0, 'ankiErrorMsg');
+    //temporary fix for the API call
+    chrome.webRequest.onBeforeSendHeaders.addListener(
+        function (details) {
+            details.requestHeaders.push({
+                name: 'Origin',
+                value: 'https://ankiweb.net'
+            });
+            return {requestHeaders: details.requestHeaders};
+        },
+        {urls: ['https://ankiweb.net/edit/save']},
+        ['blocking', 'requestHeaders']
+    );
 
-    //currentXhr = $.post('https://ankiweb.net/edit/save',
-    //    newCardData,
-    //    function (data, textStatus) {
-    //        if (textStatus == 'error') {
-    //            alert(chrome.i18n.getMessage("errorCard"));
-    //            return;
-    //        }
-    //        $(".loadinggifsmall").stop(true).fadeOut(400);
-    //        $(".loadinggif").stop(true).fadeTo(60, 0, function () {
-    //            $(this).css("display", "none")
-    //        });
-    //        $(".buttonready").stop(true).fadeTo(100, 1, function () {
-    //            $(this).css({"display": "block", "opacity": "1"})
-    //        });
-    //
-    //        clearFields();
-    //        currentXhr = null;
-    //        //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
-    //        saveCombo();
-    //        localStorage["caretField"] = 1;
-    //        localStorage["caretPos"] = 0;
-    //        loadSelection();
-    //
-    //        //If shift was held when the button was pressed
-    //        if (dontCloseAfterAdding) {
-    //            $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
-    //        } else {
-    //            window.close();
-    //        }
-    //    });
+    currentXhr = $.post('https://ankiweb.net/edit/save',
+        newCardData,
+        function (data, textStatus) {
+            if (textStatus == 'error') {
+                alert(chrome.i18n.getMessage("errorCard"));
+                return;
+            }
+            $(".loadinggifsmall").stop(true).fadeOut(400);
+            $(".loadinggif").stop(true).fadeTo(60, 0, function () {
+                $(this).css("display", "none")
+            });
+            $(".buttonready").stop(true).fadeTo(100, 1, function () {
+                $(this).css({"display": "block", "opacity": "1"})
+            });
+
+            clearFields();
+            currentXhr = null;
+            //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
+            saveCombo();
+            localStorage["caretField"] = 1;
+            localStorage["caretPos"] = 0;
+            loadSelection();
+
+            //If shift was held when the button was pressed
+            if (dontCloseAfterAdding) {
+                $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
+            } else {
+                window.close();
+            }
+        });
 }
 
 function loadTranslation() {

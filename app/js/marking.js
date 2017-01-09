@@ -189,9 +189,7 @@ function updateLayout() {
 }
 
 function isP(character) { //Returns whether a character is a punctuation
-    return /[.!?:,;_'"”“´`()\[\]{}<>*+|$%&/\\\-
-]/.
-    test(character);
+    return /[.!?:,;_'"”“´`()\[\]{}<>*+|$%&/\\\-]/.test(character);
 }
 
 function isEarlier(idA, idB) { //Returns whether idA comes before idB

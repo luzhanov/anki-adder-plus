@@ -1,12 +1,13 @@
 {
    "background": {
-      "persistent": false,
+      "persistent": true,
       "scripts": [ "eventPage.js" ]
    },
    "browser_action": {
       "default_icon": "images/32.png",
       "default_popup": "popup.html"
    },
+   "options_page": "options.html",
    "commands": {
       "_execute_browser_action": {
          "suggested_key": {
@@ -61,8 +62,9 @@
 
    "manifest_version": 2,
    "name": "Anki Adder Plus",
-   "options_page": "options.html",
-   "permissions": [ "tabs", "http://*/*", "https://*/*", "contextMenus" ],
+   "minimum_chrome_version": "50.0.0.0",
+
+   "permissions": [ "webRequest", "webRequestBlocking", "tabs", "http://*/*", "https://*/*", "contextMenus" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.1.3"
+   "version": "1.1.4"
 }
