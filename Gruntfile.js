@@ -33,9 +33,22 @@ module.exports = function (grunt) {
                     {expand: true, cwd: 'build/', src: '**'}
                 ]
             }
+        },
+        karma: {
+            options: {
+                configFile: 'karma.conf.js'
+            },
+            dev: {
+                singleRun: false,
+                autoWatch: true
+            },
+            prod: {
+                singleRun: true
+            }
         }
     });
 
+    grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks('grunt-contrib-compress');
 
@@ -49,7 +62,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
-        //    'karma', //todo: use testing
+        'karma:prod',
         'copy',
         'compress'
     ]);
