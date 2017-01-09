@@ -61,16 +61,18 @@ function addSelectionToField(selectionRaw, menuIdx) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
-    if (!localStorage["field" + menuIdx] || localStorage["field" + menuIdx] === "<div><br></div>" || localStorage["field" + menuIdx] === "<br>") {
-        localStorage["field" + menuIdx] = selection.replace(/\n/g, "<br>");
+    //Setting new value or appending to the existing one
+    var fieldN = ("field" + menuIdx);
+    if (!localStorage[fieldN] || localStorage[fieldN] === "<div><br></div>" || localStorage[fieldN] === "<br>") {
+        localStorage[fieldN] = selection.replace(/\n/g, "<br>");
     } else {
-        localStorage["field" + menuIdx] += "<br><br>" + selection.replace(/\n/g, "<br>");
+        localStorage[fieldN] += "<br><br>" + selection.replace(/\n/g, "<br>");
     }
 
     //Make the newly added text selected
     localStorage["caretField"] = menuIdx;
     if (isClozeField) { //If field is a cloze field
-        var fullLength = convertHtmlToCloze(localStorage["field" + menuIdx]).length;
+        var fullLength = convertHtmlToCloze(localStorage[fieldN]).length;
         var insertedLength = convertHtmlToCloze(selection.replace(/\n/g, "<br>")).length;
         localStorage["caretPos"] = (fullLength - insertedLength) + "->" + (fullLength);
     } else {
