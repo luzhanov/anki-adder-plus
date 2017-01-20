@@ -8,41 +8,6 @@ $(document).ready(function () {
     optionsListModels();
     optionsListDecks();
 
-    //Check if the lists of models/decks have changed
-    connectToAnki(function (updateCurrent, updateModelList, updateDeckList) {
-        $("#accountMessage").text('');
-        if (updateModelList)
-            optionsListModels();
-        if (updateDeckList) {
-            optionsListDecks();
-            detailedDeckNames();
-        }
-    }, function(errorMessage) {
-        var msgLocalised = chrome.i18n.getMessage(errorMessage);
-        $("#accountMessage").html(msgLocalised);
-    });
-
-    $("#saveaccountbutton").on('click', function () {
-        localStorage['option-ID'] = $('#option-ID-field').val();
-        localStorage['option-password'] = $('#option-password-field').val();
-
-        //Refresh decks and models
-        if (currentXhr && currentXhr.readyState != 4) {
-            currentXhr.abort();
-        }
-        console.log("Connecting to Anki login");
-        connectToAnki(function (updateCurrent, updateModelList, updateDeckList) {
-            if (updateModelList)
-                optionsListModels();
-            if (updateDeckList) {
-                optionsListDecks();
-                detailedDeckNames();
-            }
-        }, function(errorMessage) {
-            //todo: i18n message
-            alert(errorMessage);
-        }, true);
-    });
     $("#shortcutbutton").on('click', function () {
         $("#excludepanel").slideUp();
         $("#shortcutpanel").slideToggle();

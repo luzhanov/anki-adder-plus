@@ -16,21 +16,27 @@ var clozeN = -1;
 var oldClozeN = -1;
 
 $(document).ready(function () {
-    if (!localStorage["option-ID"] || !localStorage["option-password"]) {
-        showMessage(1, "errorNoinfo");
-        return;
-    }
-    if (!localStorage["login-status"] || localStorage["login-status"] != "OK") {
-        showMessage(1, "errorLoginStatus");
-        return;
-    }
-    if (!navigator.onLine) {
-        showMessage(0, "errorNointernet");
-        return;
+    //removing old data from the time of Anki API connectivity
+    if (!isLoginEmpty()) {
+        removeModelsFromLocalStorage();
+        removeDecksFromLocalStorage();
+        removeLoginData();
+
+        console.log("Old login & decks data removed");
     }
 
-    if (localStorage["model0"] === undefined || localStorage["deck0"] === undefined) {
-        showMessage(0, "errorLoading");
+    var updateCurrent = false;
+    var updateModelList = false;
+    var updateDeckList = false;
+
+    if (isModelsEmpty() || isDecksEmpty()) {
+        fillDefaultModels();
+        fillDefaultDecks();
+        updateContextMenu();
+        updateModelList = true;
+        updateDeckList = true;
+
+        console.log("Default models and decks created");
     } else {
         //Make sure there are non-hidden models and decks
         var allModelsAreHidden = true;
@@ -56,36 +62,31 @@ $(document).ready(function () {
             return;
         }
 
-
         formStart();
     }
 
-    connectToAnki(function (updateCurrent, updateModelList, updateDeckList) {
-        if ($("#popup").css("display") == "none") {
-            formStart();
-        }
-        $(".loadinggifsmall").stop(true).fadeOut(400);
-        if (updateModelList)
-            fillModelList();
-        if (updateDeckList) {
-            detailedDeckNames();
-            fillDeckList();
-            showDetailedDeckName();
-        }
-        if (updateCurrent) {
-            if ($(document.activeElement).attr("data-fieldnum"))
-                saveSelection($(document.activeElement).attr("data-fieldnum"));
-            generateFields();
-            loadSelection();
-        }
-    }, function(errorMessage) {
-        if (errorMessage == "errorWronginfo") {
-            showMessage(1, "errorWronginfo");
-        } else {
-            alert(errorMessage);
-        }
-    });
+    initPopupInternal(updateCurrent, updateModelList, updateDeckList);
 });
+
+function initPopupInternal(updateCurrent, updateModelList, updateDeckList) {
+    if ($("#popup").css("display") == "none") {
+        formStart();
+    }
+    $(".loadinggifsmall").stop(true).fadeOut(400);
+    if (updateModelList)
+        fillModelList();
+    if (updateDeckList) {
+        detailedDeckNames();
+        fillDeckList();
+        showDetailedDeckName();
+    }
+    if (updateCurrent) {
+        if ($(document.activeElement).attr("data-fieldnum"))
+            saveSelection($(document.activeElement).attr("data-fieldnum"));
+        generateFields();
+        loadSelection();
+    }
+}
 
 function formStart() {
     $("#popup").css("display", "block");
@@ -469,8 +470,6 @@ function initKeyShortcuts() {
 }
 
 function generateFields() {
-    console.log("Field generation started");
-
     var fieldsElement = $("#fields");
 
     fieldsElement.empty();

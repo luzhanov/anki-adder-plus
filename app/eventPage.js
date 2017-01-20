@@ -39,7 +39,7 @@ function onContextMenuClick(menuIdx) {
     }, function (selection) {
         chrome.tabs.insertCSS({code: "body {cursor: default}"});
         if (selection !== undefined) {
-            _gaq.push(['_trackEvent', 'Insert', "field_menu"]);
+            //_gaq.push(['_trackEvent', 'Insert', "field_menu"]);
             addSelectionToField(selection[0], menuIdx);
         } else {
             alert(chrome.i18n.getMessage("errorCannotcontext"));

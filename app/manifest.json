@@ -1,6 +1,6 @@
 {
    "background": {
-      "persistent": true,
+      "persistent": false,
       "scripts": [ "eventPage.js" ]
    },
    "browser_action": {
@@ -64,7 +64,7 @@
    "name": "Anki Adder Plus",
    "minimum_chrome_version": "50.0.0.0",
 
-   "permissions": [ "webRequest", "webRequestBlocking", "tabs", "http://*/*", "https://*/*", "contextMenus" ],
+   "permissions": [ "tabs", "http://*/*", "https://*/*", "contextMenus" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
    "version": "2.0.0"
 }

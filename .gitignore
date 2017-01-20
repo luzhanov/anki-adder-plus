@@ -4,6 +4,7 @@
 /projectFilesBackup
 /node_modules
 app.zip
+*.txt
 anki-adder-plus.zip
 /app/dist/js/*.*
 /app/src/app/.baseDir.ts
