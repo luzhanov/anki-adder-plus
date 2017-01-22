@@ -109,6 +109,9 @@
    "opPassword": {
       "message": "Password: "
    },
+   "newDeck": {
+      "message": "New deck: "
+   },
    "opShortcuts1": {
       "message": "This extension supports shortcuts for quickly adding selected text to each field, without the need to first open the popup window."
    },

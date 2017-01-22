@@ -5,6 +5,7 @@ $(document).ready(function () {
     loadShortcuts();
     loadTranslation();
 
+    optionsLocalDecks();
     optionsListModels();
     optionsListDecks();
 
@@ -105,6 +106,15 @@ function optionsListModels() {
     }
 }
 
+function optionsLocalDecks() {
+    var deckslist = $("#deckslist");
+    deckslist.empty();
+
+    for (var n = 0; localStorage["deck" + n]; n++) {
+        deckslist.append( '<tr><td>' + localStorage["deck" + n] + '</td></tr>' );
+    }
+}
+
 function optionsListDecks() {
     $("#decklist").empty();
     for (var n = 0; localStorage["deck" + n]; n++) {
@@ -158,9 +168,10 @@ function optionsListDecks() {
                         }))
                     .append($(document.createElement("span")).append(document.createTextNode(endName))))
         );
-        if (localStorage["excludedDeck:" + localStorage["deck" + n]])
+        if (localStorage["excludedDeck:" + localStorage["deck" + n]]) {
             $("#decklist input").last().attr("checked", true);
-        else
+        } else {
             $("#decklist input").last().css("opacity", 0);
+        }
     }
 }
