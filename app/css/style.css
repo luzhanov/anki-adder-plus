@@ -173,6 +173,27 @@ hr {
 	border-color: #aaa;
 }
 
+.exportcardbutton {
+	display: inline;
+	background-color: #f9b845;
+	color: black;
+	padding: 4px 10px 4px 10px;
+	margin: 1px 5px 1px 7px;
+	border-radius: 1px;
+	box-shadow: 0 0 2px grey;
+	font-weight: bold;
+	font-family: sans-serif;
+	text-align: center;
+	text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+	float: right;
+}
+
+.exportcardbutton:hover {
+	cursor: pointer;
+	box-shadow: 0 0 6px grey;
+	background-color: #ffbd46;
+}
+
 .tagfname {
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size: 12px;
@@ -242,20 +263,6 @@ hr {
 
 .addcardbuttondown {
 	background-color: #004081;
-}
-
-.exportcardbutton, .exportcardbuttondown  {
-	background-color: #f9b845;
-	color: black;
-	padding-top: 12px;
-}
-
-.exportcardbutton:hover {
-	background-color: #ffbd46;
-}
-
-.exportcardbuttondown {
-	background-color: #d7a03b;
 }
 
 .addcardsub {

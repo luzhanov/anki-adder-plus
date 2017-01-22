@@ -133,7 +133,6 @@ function initPopup() {
         }
     });
 
-    //todo: move the export button near the deck select/dropdown
     $(".exportcardbutton").click(function () {
         //todo: save currently selected deck
 
