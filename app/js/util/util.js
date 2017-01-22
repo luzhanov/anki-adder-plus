@@ -51,3 +51,12 @@ function calculateNodeCount(selection) {
     return numberOfTextNodes + numberOfNewLines;
 }
 
+function loadTranslation() {
+    $("*[data-i18n]").each(function () {
+        $(this).html(chrome.i18n.getMessage($(this).attr("data-i18n")));
+    });
+    $("*[data-i18ntt]").each(function () {
+        $(this).attr("title", chrome.i18n.getMessage($(this).attr("data-i18ntt"))); //Tooltip
+    });
+}
+

@@ -2,6 +2,7 @@
 
 var currentXhr = undefined; //Is null when finished
 
+//todo: refactor usage of this method
 function connectToAnki(successCallback, errorCallback, forceRelogin) {
     retrieveData(successCallback);
 }
@@ -102,47 +103,42 @@ function addNote(dontClose) {
         deck: (returnDeck ? localStorage["currentDeck"] : $("[name=deck]").val())
     };
 
-    showMessage(0, 'ankiErrorMsg');
+    //saving note to the deck DB
+    var deckDb = new LDB.Collection(newCardData.deck);
+    var deckSizeBefore = deckDb.items.length;
 
-    //currentXhr = $.post('https://zankiweb.net/edit/save',
-    //    newCardData,
-    //    function (data, textStatus) {
-    //        if (textStatus == 'error') {
-    //            alert(chrome.i18n.getMessage("errorCard"));
-    //            _gaq.push(['_trackEvent', 'Card_add_error']);
-    //            return;
-    //        }
-    //        $(".loadinggifsmall").stop(true).fadeOut(400);
-    //        $(".loadinggif").stop(true).fadeTo(60, 0, function () {
-    //            $(this).css("display", "none")
-    //        });
-    //        $(".buttonready").stop(true).fadeTo(100, 1, function () {
-    //            $(this).css({"display": "block", "opacity": "1"})
-    //        });
-    //
-    //        clearFields();
-    //        currentXhr = null;
-    //        //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
-    //        saveCombo();
-    //        localStorage["caretField"] = 1;
-    //        localStorage["caretPos"] = 0;
-    //        loadSelection();
-    //
-    //        //If shift was held when the button was pressed
-    //        if (dontCloseAfterAdding) {
-    //            $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
-    //        } else {
-    //            window.close();
-    //        }
-    //    });
-}
+    deckDb.save(newCardData, function(_item){
+        //console.log('Card added:', _item);
 
-function loadTranslation() {
-    $("*[data-i18n]").each(function () {
-        $(this).html(chrome.i18n.getMessage($(this).attr("data-i18n")));
-    });
-    $("*[data-i18ntt]").each(function () {
-        $(this).attr("title", chrome.i18n.getMessage($(this).attr("data-i18ntt"))); //Tooltip
+        //todo: remove all fading issues in the plugin
+        $(".loadinggifsmall").stop(true).fadeOut(400);
+        $(".loadinggif").stop(true).fadeTo(60, 0, function () {
+            $(this).css("display", "none")
+        });
+        $(".buttonready").stop(true).fadeTo(100, 1, function () {
+            $(this).css({"display": "block", "opacity": "1"})
+        });
+
+        clearFields();
+
+        //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
+        saveCombo();
+        localStorage["caretField"] = 1;
+        localStorage["caretPos"] = 0;
+        loadSelection();
+
+        //checking do we have space for saving cards to the local DB - validate if max saving limit reached
+        var deckSizeAfter = deckDb.items.length;
+        if (deckSizeAfter != deckSizeBefore + 1) {
+            showMessage(0, 'ankiErrorMsg');
+        }
+
+        //If shift was held when the button was pressed
+        if (dontCloseAfterAdding) {
+            $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
+        } else {
+            window.close();
+        }
     });
 }
 

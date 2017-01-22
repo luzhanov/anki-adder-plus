@@ -133,6 +133,28 @@ function initPopup() {
         }
     });
 
+    //todo: move the export button near the deck select/dropdown
+    $(".exportcardbutton").click(function () {
+        //todo: save currently selected deck
+
+        var deckName = localStorage["currentDeck"];
+        console.log("Saving deck: " + deckName);
+
+        var deckDb = new LDB.Collection(deckName);
+
+        //todo: implement real export
+        console.log("size", deckDb.items.length);
+
+        deckDb.find({}, function (results) {
+            for (var i = 0; i < results.length; i++) {
+                console.log("Record: " + results[i].data);
+            }
+        });
+
+        //todo: clear after export
+        //deckDb.drop();
+    });
+
     //Attach event handlers for change to model and deck lists
     $("select[name='model']").change(function () {
         localStorage["currentModel"] = $(this).val();

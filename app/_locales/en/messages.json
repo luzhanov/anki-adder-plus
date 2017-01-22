@@ -210,5 +210,8 @@
    },
    "ankiErrorMsg": {
       "message": "Unfortunately card saving is blocked by the Anki officials.\nVote for the workaround <a target='_blank' href='https://github.com/luzhanov/anki-adder-plus/issues/6'>here</a>."
+   },
+   "localSavingError" : {
+      "message": "Your local storage is full. Please export your decks to file."
    }
 }
