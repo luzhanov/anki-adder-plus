@@ -66,5 +66,5 @@
 
    "permissions": [ "webRequest", "webRequestBlocking", "tabs", "http://*/*", "https://*/*", "contextMenus" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.1.5"
+   "version": "1.1.6"
 }

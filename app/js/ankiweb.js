@@ -11,37 +11,40 @@ function connectToAnki(successCallback, errorCallback, forceRelogin) {
     //If only one argument is given, the connection failed, and the argument contains the error code word of the problem
     //callback(errorCode)
 
-    if (forceRelogin || !localStorage["login-status"] || localStorage["login-status"] != "OK") {
-        //need to relogin
-        console.log("Logout form AnkiWeb");
-        currentXhr = $.get('https://ankiweb.net/account/logout', function (data, textStatus) { //Start with logging any other user off.
-            console.log("Login to AnkiWeb");
-            currentXhr = $.post('https://ankiweb.net/account/login', { //Submit user info
-                    submitted: "1",
-                    username: localStorage["option-ID"],
-                    password: localStorage["option-password"]
-                },
-                function (data, textStatus) {
-                    var html = $(data);
-                    if ($(".mitem", html).length == 0) { //Look for element with class 'mitem' which is only used by the tabs that show up when logged in.
-                        localStorage["login-status"] = "ERROR";
-                        errorCallback("errorWronginfo"); //If it cannot be found it means the login failed, likely due to wrong username/password.
-                        return;
-                    }
+    showMessage(0, 'ankiErrorMsg');
 
-                    localStorage["login-status"] = "OK";
-                    if (localStorage["currentModel"] !== undefined && localStorage["currentDeck"] !== undefined) {
-                        //Save current combo at zero level.
-                        localStorage["combo0"] = localStorage["currentModel"] + "::" + localStorage["currentDeck"];
-                    }
-
-                    retrieveData(successCallback);
-                });
-        });
-    } else {
-        //we are already logged in
-        retrieveData(successCallback);
-    }
+    //if (forceRelogin || !localStorage["login-status"] || localStorage["login-status"] != "OK") {
+    //
+    //    //need to relogin
+    //    console.log("Logout form AnkiWeb");
+    //    currentXhr = $.get('https://ankiweb.net/account/logout', function (data, textStatus) { //Start with logging any other user off.
+    //        console.log("Login to AnkiWeb");
+    //        currentXhr = $.post('https://ankiweb.net/account/login', { //Submit user info
+    //                submitted: "1",
+    //                username: localStorage["option-ID"],
+    //                password: localStorage["option-password"]
+    //            },
+    //            function (data, textStatus) {
+    //                var html = $(data);
+    //                if ($(".mitem", html).length == 0) { //Look for element with class 'mitem' which is only used by the tabs that show up when logged in.
+    //                    localStorage["login-status"] = "ERROR";
+    //                    errorCallback("errorWronginfo"); //If it cannot be found it means the login failed, likely due to wrong username/password.
+    //                    return;
+    //                }
+    //
+    //                localStorage["login-status"] = "OK";
+    //                if (localStorage["currentModel"] !== undefined && localStorage["currentDeck"] !== undefined) {
+    //                    //Save current combo at zero level.
+    //                    localStorage["combo0"] = localStorage["currentModel"] + "::" + localStorage["currentDeck"];
+    //                }
+    //
+    //                retrieveData(successCallback);
+    //            });
+    //    });
+    //} else {
+    //    //we are already logged in
+    //    retrieveData(successCallback);
+    //}
 }
 
 function retrieveData(successCallback) {
@@ -278,50 +281,52 @@ function addNote(dontClose) {
         deck: (returnDeck ? localStorage["currentDeck"] : $("[name=deck]").val())
     };
 
+    showMessage(0, 'ankiErrorMsg');
+
     //temporary fix for the API call
-    chrome.webRequest.onBeforeSendHeaders.addListener(
-        function (details) {
-            details.requestHeaders.push({
-                name: 'Origin',
-                value: 'https://ankiweb.net'
-            });
-            return {requestHeaders: details.requestHeaders};
-        },
-        {urls: ['https://ankiweb.net/edit/save']},
-        ['blocking', 'requestHeaders']
-    );
-
-    currentXhr = $.post('https://ankiweb.net/edit/save',
-        newCardData,
-        function (data, textStatus) {
-            if (textStatus == 'error') {
-                alert(chrome.i18n.getMessage("errorCard"));
-                _gaq.push(['_trackEvent', 'Card_add_error']);
-                return;
-            }
-            $(".loadinggifsmall").stop(true).fadeOut(400);
-            $(".loadinggif").stop(true).fadeTo(60, 0, function () {
-                $(this).css("display", "none")
-            });
-            $(".buttonready").stop(true).fadeTo(100, 1, function () {
-                $(this).css({"display": "block", "opacity": "1"})
-            });
-
-            clearFields();
-            currentXhr = null;
-            //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
-            saveCombo();
-            localStorage["caretField"] = 1;
-            localStorage["caretPos"] = 0;
-            loadSelection();
-
-            //If shift was held when the button was pressed
-            if (dontCloseAfterAdding) {
-                $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
-            } else {
-                window.close();
-            }
-        });
+    //chrome.webRequest.onBeforeSendHeaders.addListener(
+    //    function (details) {
+    //        details.requestHeaders.push({
+    //            name: 'Origin',
+    //            value: 'https://ankiweb.net'
+    //        });
+    //        return {requestHeaders: details.requestHeaders};
+    //    },
+    //    {urls: ['https://ankiweb.net/edit/save']},
+    //    ['blocking', 'requestHeaders']
+    //);
+    //
+    //currentXhr = $.post('https://ankiweb.net/edit/save',
+    //    newCardData,
+    //    function (data, textStatus) {
+    //        if (textStatus == 'error') {
+    //            alert(chrome.i18n.getMessage("errorCard"));
+    //            _gaq.push(['_trackEvent', 'Card_add_error']);
+    //            return;
+    //        }
+    //        $(".loadinggifsmall").stop(true).fadeOut(400);
+    //        $(".loadinggif").stop(true).fadeTo(60, 0, function () {
+    //            $(this).css("display", "none")
+    //        });
+    //        $(".buttonready").stop(true).fadeTo(100, 1, function () {
+    //            $(this).css({"display": "block", "opacity": "1"})
+    //        });
+    //
+    //        clearFields();
+    //        currentXhr = null;
+    //        //Save combination of model and deck to enable the user to quickly return to the most recently used combinations.
+    //        saveCombo();
+    //        localStorage["caretField"] = 1;
+    //        localStorage["caretPos"] = 0;
+    //        loadSelection();
+    //
+    //        //If shift was held when the button was pressed
+    //        if (dontCloseAfterAdding) {
+    //            $(".addcardbuttondown").addClass("addcardbutton").removeClass("addcardbuttondown");
+    //        } else {
+    //            window.close();
+    //        }
+    //    });
 }
 
 function loadTranslation() {
