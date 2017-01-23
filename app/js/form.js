@@ -15,6 +15,17 @@ var returnDeck = false; //When the value of the deck list has been changed into 
 var clozeN = -1;
 var oldClozeN = -1;
 
+function saveTextToFile(text, fileName = 'deck.txt') {
+    // todo: discuss using chrom storage API
+    // https://developer.chrome.com/apps/app_storage#filesystem
+    const textFileAsBlob = new Blob([text], {type:'text/plain'});
+    const downloadLink = document.createElement("a");
+    downloadLink.download = fileName;
+    downloadLink.innerHTML = fileName;
+    downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+    downloadLink.click();
+}
+
 $(document).ready(function () {
     //removing old data from the time of Anki API connectivity
     if (!isLoginEmpty()) {
@@ -134,24 +145,34 @@ function initPopup() {
     });
 
     $(".exportcardbutton").click(function () {
-        //todo: save currently selected deck
-
         var deckName = localStorage["currentDeck"];
         console.log("Saving deck: " + deckName);
 
         var deckDb = new LDB.Collection(deckName);
 
-        //todo: implement real export
         console.log("size", deckDb.items.length);
+        const fileBody = [`Card front side	Card back side`];
 
-        deckDb.find({}, function (results) {
-            for (var i = 0; i < results.length; i++) {
-                console.log("Record: " + results[i].data);
-            }
-        });
+        const findPromise = new Promise((resolve) => deckDb.find({}, resolve));
 
-        //todo: clear after export
-        //deckDb.drop();
+        findPromise
+            .then((results) => {
+                results.forEach(({data}) => {
+                    const [[front, back], tags] = JSON.parse(data);
+                    fileBody.push([front, back].join('\t'));
+                });
+                return fileBody.join('\n');
+            })
+            .then((fileContent) => {
+                // I'm not sure about next step. Cause till we don't use file storage API
+                // we can't be sure, that data was save successfully ( user can precc Cancel on file save dialog )
+                // todo: discuss marking exported records to avoid duplication on next export and do not remove them from db
+                // also Anki support ignoring cards with the same question on import - so this functional can be redundant
+                if (confirm('Clear db after export?')) {
+                    deckDb.drop();
+                }
+                saveTextToFile(fileContent, `${deckName}.txt`);
+            });
     });
 
     //Attach event handlers for change to model and deck lists
