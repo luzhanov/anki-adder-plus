@@ -15,6 +15,17 @@ var returnDeck = false; //When the value of the deck list has been changed into 
 var clozeN = -1;
 var oldClozeN = -1;
 
+function saveTextToFile(text, fileName = 'deck.txt') {
+    // todo: discuss using chrom storage API
+    // https://developer.chrome.com/apps/app_storage#filesystem
+    const textFileAsBlob = new Blob([text], {type:'text/plain'});
+    const downloadLink = document.createElement("a");
+    downloadLink.download = fileName;
+    downloadLink.innerHTML = fileName;
+    downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+    downloadLink.click();
+}
+
 $(document).ready(function () {
     //removing old data from the time of Anki API connectivity
     if (!isLoginEmpty()) {
@@ -134,20 +145,21 @@ function initPopup() {
     });
 
     $(".exportcardbutton").click(function () {
-        //todo: save currently selected deck
-
         var deckName = localStorage["currentDeck"];
         console.log("Saving deck: " + deckName);
 
         var deckDb = new LDB.Collection(deckName);
 
-        //todo: implement real export
         console.log("size", deckDb.items.length);
+        const fileBody = [`Card front side	Card back side`];
 
         deckDb.find({}, function (results) {
             for (var i = 0; i < results.length; i++) {
                 console.log("Record: " + results[i].data);
+                const [[front, back], tags] = JSON.parse(results[i].data);
+                fileBody.push([front, back].join('\t'));
             }
+            saveTextToFile(fileBody.join('\n'), `${deckName}.txt`);
         });
 
         //todo: clear after export
