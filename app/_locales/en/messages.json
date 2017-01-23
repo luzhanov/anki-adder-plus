@@ -216,5 +216,8 @@
    },
    "localSavingError" : {
       "message": "Your local storage is full. Please export your decks to file."
+   },
+   "clearDeckAfterExport" : {
+      "message": "Do you want to clear current deck after export?"
    }
 }

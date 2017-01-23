@@ -173,7 +173,7 @@ function initPopup() {
                 // we can't be sure, that data was save successfully ( user can precc Cancel on file save dialog )
                 // todo: discuss marking exported records to avoid duplication on next export and do not remove them from db
                 // also Anki support ignoring cards with the same question on import - so this functional can be redundant
-                if (confirm('Clear db after export?')) {
+                if (confirm(chrome.i18n.getMessage("clearDeckAfterExport"))) { //clearDeckAfterExport
                     deckDb.drop();
                 }
                 saveTextToFile(fileContent, `${deckName}.csv`);
