@@ -163,7 +163,7 @@ function initPopup() {
                 });
                 return fileBody.join('\n');
             })
-            .then((fileBody) => {
+            .then((fileContent) => {
                 // I'm not sure about next step. Cause till we don't use file storage API
                 // we can't be sure, that data was save successfully ( user can precc Cancel on file save dialog )
                 // todo: discuss marking exported records to avoid duplication on next export and do not remove them from db
@@ -171,7 +171,7 @@ function initPopup() {
                 if (confirm('Clear db after export?')) {
                     deckDb.drop();
                 }
-                saveTextToFile(fileBody, `${deckName}.txt`);
+                saveTextToFile(fileContent, `${deckName}.txt`);
             });
     });
 
