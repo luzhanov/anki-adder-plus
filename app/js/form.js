@@ -151,15 +151,20 @@ function initPopup() {
         var deckDb = new LDB.Collection(deckName);
 
         console.log("size", deckDb.items.length);
-        const fileBody = [`Card front side	Card back side`];
 
         const findPromise = new Promise((resolve) => deckDb.find({}, resolve));
 
         findPromise
             .then((results) => {
-                results.forEach(({data}) => {
-                    const [[front, back], tags] = JSON.parse(data);
-                    fileBody.push([front, back].join('\t'));
+                const fileBody = [];
+                results.forEach(({data}, index) => {
+                    const [fieldsList, tags] = JSON.parse(data);
+                    if (index === 0) {
+                        // fill columns by first card
+                        fileBody.push(fieldsList.map((_, index) => `Field #${index + 1}`).join('\t'));
+                    }
+
+                    fileBody.push(fieldsList.join('\t'));
                 });
                 return fileBody.join('\n');
             })
@@ -171,7 +176,7 @@ function initPopup() {
                 if (confirm('Clear db after export?')) {
                     deckDb.drop();
                 }
-                saveTextToFile(fileContent, `${deckName}.txt`);
+                saveTextToFile(fileContent, `${deckName}.csv`);
             });
     });
 
