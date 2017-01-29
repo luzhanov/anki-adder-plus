@@ -18,14 +18,24 @@ $(document.body).on('click', "#excludebutton", () => {
 
 $(document.body).on('click', ".extensionslink", () => chrome.tabs.create({ url: 'chrome://chrome/extensions' }));
 
+$(document.body).on('click', '#savedeckbutton', () => {
+    const $newDeckField = $('#new-deck-field');
+    let newDeckName = $newDeckField.val();
+    let list = DeckMng.getListOfDecks();
+    if (newDeckName && !DeckMng.hasDeck(newDeckName)) {
+        DeckMng.addDeck(newDeckName);
+        $newDeckField.val('');
+        updateDecksList();
+    }
+});
+
 $(document).ready(() => {
     loadValues();
     loadShortcuts();
     loadTranslation();
 
-    optionsLocalDecks();
     optionsListModels();
-    // optionsListDecks();
+    updateDecksList();
 });
 
 function loadValues() {
@@ -103,6 +113,11 @@ function optionsListModels() {
         else
             $("#modellist input").last().css("opacity", 0);
     }
+}
+
+function updateDecksList() {
+    optionsLocalDecks();
+    // optionsListDecks();
 }
 
 function optionsLocalDecks() {

@@ -39,6 +39,10 @@ window.DeckMng = {
     return this;
   },
 
+  hasDeck(name) {
+    return this.getListOfDecks().includes(name);
+  },
+
   setCurrentDeck(name) {
     this._setVal(LS_KEYS.CURRENT_DECK, name);
     return this;
