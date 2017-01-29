@@ -5,7 +5,9 @@ function isModelsEmpty() {
 }
 
 function isDecksEmpty() {
-    return localStorage["deck0"] === undefined;
+    return DeckMng.getListOfDecks().length === 0;
+    // todo: remove
+    // return localStorage["deck0"] === undefined;
 }
 
 function isLoginEmpty() {

@@ -145,7 +145,7 @@ function initPopup() {
     });
 
     $(".exportcardbutton").click(function () {
-        var deckName = localStorage["currentDeck"];
+        var deckName = DeckMng.getCurrentDeck();
         console.log("Saving deck: " + deckName);
 
         var deckDb = new LDB.Collection(deckName);
@@ -185,17 +185,17 @@ function initPopup() {
         localStorage["currentModel"] = $(this).val();
         generateFields();
         updateContextMenu();
-        localStorage["combo0"] = localStorage["currentModel"] + "::" + localStorage["currentDeck"]; //Save changed combo at zero level
+        localStorage["combo0"] = localStorage["currentModel"] + "::" + DeckMng.getCurrentDeck(); //Save changed combo at zero level
         if (localStorage["combo0"] == localStorage["combo1"])
             comboLevel = 1;
         else
             comboLevel = 0;
     });
     $("select[name='deck']").change(function () {
-        localStorage["currentDeck"] = $(this).val();
-        var chosenClass = $("[name='deck'] > option[value='" + localStorage["currentDeck"] + "']").attr("class");
+        DeckMng.setCurrentDeck($(this).val());
+        var chosenClass = $("[name='deck'] > option[value='" + DeckMng.getCurrentDeck() + "']").attr("class");
         $("select[name='deck']").removeClass().addClass(chosenClass);
-        localStorage["combo0"] = localStorage["currentModel"] + "::" + localStorage["currentDeck"]; //Save changed combo at zero level
+        localStorage["combo0"] = localStorage["currentModel"] + "::" + DeckMng.getCurrentDeck(); //Save changed combo at zero level
         if (localStorage["combo0"] == localStorage["combo1"])
             comboLevel = 1;
         else
@@ -205,7 +205,7 @@ function initPopup() {
         "focus": function () {
             if (returnDeck) {
                 returnDeck = false;
-                $(this).val(localStorage["currentDeck"]);
+                $(this).val(DeckMng.getCurrentDeck());
             }
         },
         "blur": function () {
@@ -872,16 +872,16 @@ function fillDeckList() {
             .addClass(className)
     );
 
-    if (localStorage["currentDeck"]) {
-        $deckSelect.val(localStorage["currentDeck"]);
-        var chosenClass = $("select[name='deck'] > option[value='" + localStorage["currentDeck"] + "']").attr("class");
+    if (DeckMng.getCurrentDeck()) {
+        $deckSelect.val(DeckMng.getCurrentDeck());
+        var chosenClass = $("select[name='deck'] > option[value='" + DeckMng.getCurrentDeck() + "']").attr("class");
         $deckSelect.removeClass().addClass(chosenClass);
     }
-    localStorage["currentDeck"] = $deckSelect.val(); //Avoid non-existing values
+    DeckMng.setCurrentDeck($deckSelect.val()); //Avoid non-existing values
 }
 
 function saveCombo() {
-    var c = localStorage["currentModel"] + "::" + localStorage["currentDeck"];
+    var c = localStorage["currentModel"] + "::" + DeckMng.getCurrentDeck();
     var i = 1;
     var hole = -1; //Position where the 'hole' occurs, where the filling should start
     while (localStorage["combo" + i]) {
@@ -920,7 +920,7 @@ function loadCombo(saveCurrent, direction) {
         return false; //Cannot load non-existent combo
 
     if (saveCurrent) //If you go from level 1 to 0, the current configuration is saved at 0
-        localStorage["combo0"] = localStorage["currentModel"] + "::" + localStorage["currentDeck"]; //Save previous combo at zero level
+        localStorage["combo0"] = localStorage["currentModel"] + "::" + DeckMng.getCurrentDeck(); //Save previous combo at zero level
 
     $("select[name=model]").val(model);
     localStorage["currentModel"] = model;
@@ -940,8 +940,8 @@ function loadCombo(saveCurrent, direction) {
     loadSelection();
 
     $("select[name=deck]").val(deck);
-    localStorage["currentDeck"] = deck;
-    var chosenClass = $("select[name='deck'] > option[value='" + localStorage["currentDeck"] + "']").attr("class");
+    DeckMng.setCurrentDeck(deck);
+    var chosenClass = $(`select[name='deck'] > option[value='${ DeckMng.getCurrentDeck() }']`).attr("class");
     $("select[name='deck']").removeClass().addClass(chosenClass);
 
     //Use longer names when needed
@@ -1097,7 +1097,7 @@ function downUnDownButtons() {
 }
 
 function showDetailedDeckName() {
-    var d = localStorage["currentDeck"];
+    var d = DeckMng.getCurrentDeck();
     if (localStorage["detailedDeckName:" + d]) {
         $("select[name=deck]").val("\n");
         $("#hiddendeck").html(localStorage["detailedDeckName:" + d]);

@@ -219,5 +219,8 @@
    },
    "clearDeckAfterExport" : {
       "message": "Do you want to clear current deck after export?"
+   },
+   "confirmRemovingNonEmptyDeck": {
+      "message": "You're going to remove non-empty deck. Are you sure?"
    }
 }

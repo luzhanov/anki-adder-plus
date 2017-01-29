@@ -100,7 +100,7 @@ function addNote(dontClose) {
     var newCardData = {
         data: JSON.stringify(data),
         mid: $("[name=model]").val(), //model id
-        deck: (returnDeck ? localStorage["currentDeck"] : $("[name=deck]").val())
+        deck: (returnDeck ? DeckMng.getCurrentDeck() : $("[name=deck]").val())
     };
 
     //saving note to the deck DB
