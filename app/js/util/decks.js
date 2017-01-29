@@ -45,6 +45,12 @@ window.DeckMng = {
     return this;
   },
 
+  renameDeck(from, to) {
+    let list = this.getListOfDecks();
+    this._setVal(LS_KEYS.LIST_OF_DECKS, list.map(item => item === from ? to : item));
+    return this;
+  },
+
   isDeckEmpty(name) {
     // todo: implement it
     return true;

@@ -42,6 +42,24 @@ $(document.body).on('click', 'tr[data-deck-name] [data-action="remove"]', (ev) =
   }
 });
 
+$(document.body).on('click', 'tr[data-deck-name] [data-action="rename"]', (ev) => {
+  let deckName = $(ev.target).closest('[data-deck-name]').attr('data-deck-name');
+  const askNewName = () => prompt('Enter new deck name', deckName);
+
+  while(true) {
+    let promptResult = askNewName();
+    if (!promptResult || deckName === promptResult) {
+      return;
+    }
+    if(DeckMng.hasDeck(promptResult)) {
+      alert(`Sorry. You can have decks with identical names.`);
+    } else {
+      DeckMng.renameDeck(deckName, promptResult);
+      return updateDecksList();
+    }
+  }
+});
+
 $(document).ready(() => {
   loadValues();
   loadShortcuts();
@@ -143,7 +161,9 @@ function optionsLocalDecks() {
       <tr data-deck-name="${deckName}" class="deck-item">
         <td>${deckName}</td>
         <td class="deck-operations">
-          <button data-action="remove" class="remove-btn">x</button></td>
+          <button data-action="rename" class="remove-btn" title="Rename">↺</button>
+          <button data-action="remove" class="remove-btn" title="Remove">x</button>
+        </td>
       </tr>`).join('');
   $deckslist.html(`<table>${listHtml}</table>`);
 }
