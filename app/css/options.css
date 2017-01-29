@@ -165,3 +165,7 @@ ol {
     color: red;
     margin-top: 10px;
 }
+
+#deckslist .deck-item:only-child .deck-operations .remove-btn {
+	display: none;
+}

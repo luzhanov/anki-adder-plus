@@ -39,6 +39,17 @@ window.DeckMng = {
     return this;
   },
 
+  removeDeck(name) {
+    let list = this.getListOfDecks();
+    this._setVal(LS_KEYS.LIST_OF_DECKS, list.filter(item => item !== name));
+    return this;
+  },
+
+  isDeckEmpty(name) {
+    // todo: implement it
+    return true;
+  },
+
   hasDeck(name) {
     return this.getListOfDecks().includes(name);
   },
