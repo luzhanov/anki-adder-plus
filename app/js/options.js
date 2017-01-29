@@ -1,32 +1,31 @@
 'use strict';
 
-$(document).ready(function () {
+$(document.body).on('click', "#shortcutbutton", () => {
+    $("#excludepanel").slideUp();
+    $("#shortcutpanel").slideToggle();
+});
+
+$(document.body).on('click', "#excludebutton", () => {
+    if ($("#excludepanel").css("display") == "none") { //Only when folded down, not when folded up again
+        $("#excludecontainer").css("display", "block");
+        $("#message").css("display", "none");
+        optionsListModels();
+        optionsListDecks();
+    }
+    $("#shortcutpanel").slideUp();
+    $("#excludepanel").slideToggle();
+});
+
+$(document.body).on('click', ".extensionslink", () => chrome.tabs.create({ url: 'chrome://chrome/extensions' }));
+
+$(document).ready(() => {
     loadValues();
     loadShortcuts();
     loadTranslation();
 
     optionsLocalDecks();
     optionsListModels();
-    optionsListDecks();
-
-    $("#shortcutbutton").on('click', function () {
-        $("#excludepanel").slideUp();
-        $("#shortcutpanel").slideToggle();
-    });
-    $("#excludebutton").on('click', function () {
-        if ($("#excludepanel").css("display") == "none") { //Only when folded down, not when folded up again
-            $("#excludecontainer").css("display", "block");
-            $("#message").css("display", "none");
-            optionsListModels();
-            optionsListDecks();
-        }
-        $("#shortcutpanel").slideUp();
-        $("#excludepanel").slideToggle();
-    });
-
-    $(".extensionslink").on('click', function () {
-        chrome.tabs.create({ url: 'chrome://chrome/extensions' });
-    });
+    // optionsListDecks();
 });
 
 function loadValues() {
@@ -107,12 +106,11 @@ function optionsListModels() {
 }
 
 function optionsLocalDecks() {
-    var deckslist = $("#deckslist");
-    deckslist.empty();
+    const $deckslist = $("#deckslist");
+    const decksList = DeckMng.getListOfDecks();
 
-    for (var n = 0; localStorage["deck" + n]; n++) {
-        deckslist.append( '<tr><td>' + localStorage["deck" + n] + '</td></tr>' );
-    }
+    const listHtml = decksList.map((deckName) => `<tr><td>${deckName}</td>`).join('');
+    $deckslist.html(listHtml);
 }
 
 function optionsListDecks() {
